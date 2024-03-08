@@ -14,9 +14,8 @@ import pilgrimage from "../assets/Pilgrimage.jpg"
 const Home = () => {
     return (
         <>
-            <div style={{ backgroundColor: '#051120' }} className='md:h-auto w-screen'>
-                {/* <Navbar /> */}
-                <div className='w-full'>
+            <div  className='md:h-auto w-screen'>
+                <div >
                     <img className='relative h-full w-full object-cover' src={bg} alt="bg" />
                     <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl font-bold text-center'>
                         Journey Jett Where Dreams <br /> Take Flight
@@ -58,7 +57,6 @@ const Home = () => {
                         <img src={rect} alt="" className='rounded-full h-32 ' />
                     </div>
                 </div>
-                <Footer />
             </div>
         </>
     )

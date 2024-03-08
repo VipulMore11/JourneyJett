@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from "../components/Footer"
 
 function BaseLayout() {
   return (
@@ -9,8 +10,9 @@ function BaseLayout() {
         <nav className="">
           <Navbar/>
         </nav>
-        <div className="">
+        <div className="pt-24 overflow-x-hidden" style={{ backgroundColor: '#051120' }}>
           <Outlet />
+          <Footer/>
         </div>
       </div>
     </>

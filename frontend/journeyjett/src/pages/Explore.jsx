@@ -23,8 +23,8 @@ const Explore = () => {
     }, []);
 
     return (
-        <div style={{ backgroundColor: '#051120' }} className='md:h-screen w-screen'>
-            <div className='pt-28'>
+        <div className='md:h-screen w-screen'>
+        
                 <div className='grid grid-cols-4 gap-5 mx-4'>
                     <div className='border-2 col-span-1'>
                         <h1 className='text-white font-bold mx-3 mt-4 text-2xl'>Filter</h1>
@@ -50,7 +50,7 @@ const Explore = () => {
                         ))}
                     </div>
                 </div>
-            </div>
+            
         </div>
     )
 }

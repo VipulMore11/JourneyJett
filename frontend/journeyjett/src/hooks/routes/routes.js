@@ -3,6 +3,10 @@ import BaseLayout from "../../layout/baselayout"
 import Home from "../../pages/Home"
 import Place from "../../pages/Place"
 import Explore from '../../pages/Explore';
+import Discorver from '../../pages/Discorver';
+import Events from '../../pages/Events';
+import Login from '../../pages/login/login';
+import Register from '../../pages/register/register';
 
 const routesConfig = [
   {
@@ -21,8 +25,23 @@ const routesConfig = [
         path: '/explore',
         element: <Explore />,
       },
-      // Add more routes as needed
+      {
+        path: '/discover',
+        element: <Discorver/>,
+      },
+      {
+        path: '/events',
+        element: <Events/>,
+      },
     ],
+  },
+  {
+    path: '/login',
+    element: <Login/>,
+  },
+  {
+    path: '/signup',
+    element: <Register/>,
   },
 ];
 

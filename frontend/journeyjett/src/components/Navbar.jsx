@@ -23,11 +23,11 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`bg-white bg-opacity-25 rounded-2xl font-bold text-2xl fixed w-full z-20 top-0 start-0 ${isScrolled ? 'opacity-100' : 'opacity-100'}`}>
+    <nav className={`bg-white bg-opacity-25  font-bold text-2xl fixed w-full z-20 top-0 start-0 transition-opacity duration-200 ${isScrolled ? 'opacity-20' : 'opacity-100'}`}>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <acorn href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
+        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src={logo} className="h-14" alt="Flowbite Logo" />
-        </acorn>
+        </a>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button onClick={toggleMenu} type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded={isMenuOpen}>
             <span className="sr-only">Open main menu</span>

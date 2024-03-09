@@ -26,7 +26,7 @@ const Explore = () => {
         <div className='md:h-screen w-screen'>
         
                 <div className='grid grid-cols-4 gap-5 mx-4'>
-                    <div className='border-2 col-span-1'>
+                    <div className='border-2 lg:col-span-1 hidden lg:block'>
                         <h1 className='text-white font-bold mx-3 mt-4 text-2xl'>Filter</h1>
                         <div className='border-2 text-white mx-5 rounded mt-4 p-6'>
                             <div className='flex flex-row gap-6 items-center'><input type="checkbox" /> <h1>Trending</h1></div>
@@ -36,7 +36,7 @@ const Explore = () => {
                             <div className='flex flex-row gap-6 items-center'><input type="checkbox" /> <h1>Pilgrimage Tours</h1></div>
                         </div>
                     </div>
-                    <div className='col-span-3 border-2'>
+                    <div className='lg:col-span-3 col-span-4 border-2'>
                         {data && data.map(destination => (
                             <Link to={`/places/${destination.id}`} key={destination.id}>
                                 <div className='border-2 h-32 m-9 flex flex-row'>

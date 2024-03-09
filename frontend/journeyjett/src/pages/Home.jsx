@@ -1,20 +1,34 @@
-import React from 'react'
-import Navbar from "../components/Navbar"
+import React, { useEffect, useState } from 'react'
 import bg from "../assets/bg pic.svg"
 import Search from "../components/Search"
 import rect from "../assets/Rectangle 19.svg"
-import Footer from "../components/Footer"
 import wildlife from "../assets/Wildlife.jpg"
 import adventure from "../assets/adventure.jpg"
 import beach from "../assets/beach.jpg"
 import hill from "../assets/hill.jpg"
 import heritage from "../assets/heritage.jpg"
 import pilgrimage from "../assets/Pilgrimage.jpg"
+import axios from 'axios'
 
 const Home = () => {
+
+    const [input, setinput] = useState('')
+    useEffect(() => {
+        async function getdata() {
+            try {
+                const res = await axios.get('https://jsonplaceholder.typicode.com/users');
+                console.log(res.data)
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+        getdata();
+    },[])
+
     return (
         <>
-            <div  className='md:h-auto w-screen'>
+            <div className='md:h-auto w-screen'>
                 <div >
                     <img className='relative h-full w-full object-cover' src={bg} alt="bg" />
                     <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl font-bold text-center'>
@@ -22,9 +36,9 @@ const Home = () => {
                     </div>
                 </div>
                 <div className='relative bg-white bg-opacity-25' style={{ marginTop: '-50px' }}>
-                    <div className='grid grid-cols-4  py-5 justify-items-center mx-40 '>
-                        <Search title={"From"} type={"text"} size={"text-3xl"} style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
-                        <Search title={"To"} type={"text"} size={"text-3xl"} />
+                    <div className='grid grid-cols-4 py-5 justify-center mx-40 md:gap-10'>
+                        <Search title={"From"} type={"text"} size={"text-2xl"} style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
+                        <Search title={"To"} type={"text"} size={"text-2xl"} />
                         <Search title={"Date"} type={"date"} size={"text-xl"} />
                         <button className='bg-blue-900 w-60 text-white rounded-2xl text-3xl font-bold'>Search</button>
                     </div>

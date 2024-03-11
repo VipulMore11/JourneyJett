@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import img from "../assets/hill.jpg"
 
 const Explore = () => {
 
@@ -24,7 +23,6 @@ const Explore = () => {
 
     return (
         <div className='md:h-screen w-screen'>
-        
                 <div className='grid grid-cols-4 gap-5 mx-4'>
                     <div className='border-2 lg:col-span-1 hidden lg:block'>
                         <h1 className='text-white font-bold mx-3 mt-4 text-2xl'>Filter</h1>

@@ -27,7 +27,7 @@ const Place = () => {
 
     return (
         <div style={{ backgroundColor: '#051120' }} className='md:h-full w-screen'>
-            <div className='pt-32 mx-60 ' style={{ backgroundColor: '#051120' }}>
+            <div className='mx-60 ' style={{ backgroundColor: '#051120' }}>
                 <Caro/> 
                 <div className='text-white mt-5'>
                     <div className='border-2 border-white rounded'>

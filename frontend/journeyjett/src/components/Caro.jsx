@@ -4,6 +4,7 @@ import axios from 'axios';
 import 'swiper/swiper-bundle.css'; // Import Swiper styles
 import { useParams } from 'react-router-dom';
 
+
 export default function App() {
   const [data, setData] = useState([]);
   const { id } = useParams();
@@ -28,7 +29,7 @@ export default function App() {
     <Swiper
       spaceBetween={30}
       slidesPerView={1}
-      navigation
+      navigation={true}
       pagination={{ clickable: true }}
       scrollbar={{ draggable: true }}
     >

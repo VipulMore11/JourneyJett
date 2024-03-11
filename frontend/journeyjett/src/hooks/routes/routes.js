@@ -7,6 +7,7 @@ import Discorver from '../../pages/Discorver';
 import Events from '../../pages/Events';
 import Login from '../../pages/login/login';
 import Register from '../../pages/register/register';
+import Hello from "../../pages/Hello"
 
 const routesConfig = [
   {
@@ -32,6 +33,10 @@ const routesConfig = [
       {
         path: '/events',
         element: <Events/>,
+      },
+      {
+        path: '/hello',
+        element: <Hello/>,
       },
     ],
   },

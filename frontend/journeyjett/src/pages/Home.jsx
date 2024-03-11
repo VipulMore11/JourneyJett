@@ -18,6 +18,7 @@ const Home = () => {
             try {
                 const res = await axios.get('https://jsonplaceholder.typicode.com/users');
                 console.log(res.data)
+                setinput(res.data)
             }
             catch (error) {
                 console.log(error)
@@ -30,14 +31,14 @@ const Home = () => {
         <>
             <div className='md:h-auto w-screen'>
                 <div >
-                    <img className='relative h-full w-full object-cover' src={bg} alt="bg" />
+                    <img className='relative h-full w-full object-cover ' src={bg} alt="bg" />
                     <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl font-bold text-center'>
                         Journey Jett Where Dreams <br /> Take Flight
                     </div>
                 </div>
                 <div className='relative bg-white bg-opacity-25' style={{ marginTop: '-50px' }}>
                     <div className='grid grid-cols-4 py-5 justify-center mx-40 md:gap-10'>
-                        <Search title={"From"} type={"text"} size={"text-2xl"} style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
+                        <Search value={input} fn={setinput} title={"From"} type={"text"} size={"text-2xl"} style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
                         <Search title={"To"} type={"text"} size={"text-2xl"} />
                         <Search title={"Date"} type={"date"} size={"text-xl"} />
                         <button className='bg-blue-900 w-60 text-white rounded-2xl text-3xl font-bold'>Search</button>

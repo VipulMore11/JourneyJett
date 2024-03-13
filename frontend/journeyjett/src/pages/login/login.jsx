@@ -7,6 +7,8 @@ import { MdOutlineMailOutline } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -35,8 +37,10 @@ const Login = () => {
             navigate("/");
         } catch (error) {
             console.error("Error:", error);
-            // Handle errors, show error message to the user
+            toast.error("Error: Check Your Credentials");
         }
+
+       
     };
 
     const [showpassword, setShowPassword] = useState(false);
@@ -59,6 +63,7 @@ const Login = () => {
                     </div>
                     <button className='my-5 py-3 px-10 rounded-full text-2xl' onClick={handleSubmit} style={{ backgroundColor: '#1598ff' }}>Login</button>
                     <Link to="/signup" className='mb-5'>New user? Signup</Link>
+                    <ToastContainer />
                 </div>
             </div>
         </div>

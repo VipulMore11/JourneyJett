@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function Hello() {
+
+
+    const [value, setValue] = useState(1)
+
     return (
         <>
             <div className="text-white border-2 border-white h-96 m-5 flex justify-center items-center">
@@ -10,9 +14,9 @@ export default function Hello() {
                     <input type="password" className="mb-5 text-black h-10 rounded focus:outline-none p-4" placeholder="Password"/>
                     <div className="flex flex-row gap-3">
                     <input type="checkbox" className="checkbox" />
-                    <h1>Remember me</h1>
+                    <h1>{value}</h1>
                     </div>
-                    <button className="bg-red-700 h-14 rounded-lg">Login</button>
+                    <button className="bg-red-700 h-14 rounded-lg " onClick={()=>setValue(value+1)} >Login</button>
                 </div>
             </div>
         </>

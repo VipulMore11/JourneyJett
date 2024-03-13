@@ -1,51 +1,116 @@
-import React, { useEffect, useState } from 'react'
-import bg from "../assets/bg pic.svg"
-import Search from "../components/Search"
-import rect from "../assets/Rectangle 19.svg"
-import wildlife from "../assets/Wildlife.jpg"
-import adventure from "../assets/adventure.jpg"
-import beach from "../assets/beach.jpg"
-import hill from "../assets/hill.jpg"
-import heritage from "../assets/heritage.jpg"
-import pilgrimage from "../assets/Pilgrimage.jpg"
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
+import bg from "../assets/bg pic.svg";
+import Search from "../components/Search";
+import rect from "../assets/Rectangle 19.svg";
+import wildlife from "../assets/Wildlife.jpg";
+import adventure from "../assets/adventure.jpg";
+import beach from "../assets/beach.jpg";
+import hill from "../assets/hill.jpg";
+import heritage from "../assets/heritage.jpg";
+import pilgrimage from "../assets/Pilgrimage.jpg";
+import { ImCross } from "react-icons/im";
+import { FaSearch } from "react-icons/fa";
+import axios from 'axios';
 
 const Home = () => {
+    const [input, setInput] = useState([]);
+    const [inputFilter, setInputFilter] = useState([]);
+    const [focus1, setFocus1] = useState(false);
+    const [focus2, setFocus2] = useState(false);
+    const [place, setPlace] = useState('');
 
-    const [input, setinput] = useState('')
+
+
+    const handleInputFocus1 = () => {
+        setFocus1(true);
+        setFocus2(false);
+    };
+
+    const handleInputFocus2 = () => {
+        setFocus2(true);
+        setFocus1(false);
+    };
+
     useEffect(() => {
-        async function getdata() {
+        async function getData() {
             try {
-                const res = await axios.get('https://jsonplaceholder.typicode.com/users');
-                console.log(res.data)
-                setinput(res.data)
-            }
-            catch (error) {
-                console.log(error)
+                const res = await axios.get('http://127.0.0.1:8000/get_destinations/');
+                setInput(res.data);
+                console.log(res.data[2].state);
+            } catch (error) {
+                console.log(error);
             }
         }
-        getdata();
-    },[])
+        getData();
+    }, []);
+    const handleFilter = (value) => {
+        const response = input.filter(f => f.name.includes(value));
+        setInputFilter(response);
+    };
 
     return (
         <>
             <div className='md:h-auto w-screen'>
-                <div >
-                    <img className='relative h-full w-full object-cover ' src={bg} alt="bg" />
+                <div>
+                    <img className='relative h-full w-full object-cover' src={bg} alt="bg" />
                     <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl font-bold text-center'>
                         Journey Jett Where Dreams <br /> Take Flight
                     </div>
                 </div>
-                <div className='relative bg-white bg-opacity-25' style={{ marginTop: '-50px' }}>
-                    <div className='grid grid-cols-4 py-5 justify-center mx-40 md:gap-10'>
-                        <Search value={input} fn={setinput} title={"From"} type={"text"} size={"text-2xl"} style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
-                        <Search title={"To"} type={"text"} size={"text-2xl"} />
-                        <Search title={"Date"} type={"date"} size={"text-xl"} />
-                        <button className='bg-blue-900 w-60 text-white rounded-2xl text-3xl font-bold'>Search</button>
+                <div className='relative bg-white bg-opacity-25 ' style={{ marginTop: '-50px' }}>
+                    <div className='grid grid-cols-4 py-5 justify-center mx-40 md:gap-10 h-40'>
+                        <div className='p-5 bg-white rounded-2xl h-32'>
+                            <h1 className='text-2xl'>From</h1>
+                            <div>
+                            <div className='flex flex-row border-2 rounded-2xl'>
+                                    <input type="text" className={` w-full h-12 rounded-2xl border-2 ${focus1 ? "outline" : ""}`} onFocus={() => handleInputFocus1()} onChange={e => handleFilter(e.target.value)} />
+                                    <button className=' flex justify-center items-center px-3 text-xl pe-5 pt-2' onClick={() => setFocus1(false)}>{focus1 ? <ImCross /> : <FaSearch />}</button>
+                                </div>
+                                <div className={`bg-white ${focus1 ? "block" : "hidden"} flex flex-col max-h-40 h-auto overflow-y-scroll border-2 rounded-3xl `} style={{
+                                    scrollbarWidth: 'thin',
+                                    scrollbarColor: '#ccc transparent'
+                                }}>
+                                    {inputFilter.map((d, i) => (
+                                        <button key={i} className='p-3' onClick={() => setPlace(d.name)}>
+                                            {d.name}
+                                        </button>
+                                    ))}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div className='p-5 bg-white rounded-2xl h-32'>
+                            <h1 className='text-2xl'>To</h1>
+                            <div>
+                                <div className='flex flex-row border-2 rounded-2xl'>
+                                    <input type="text" className={` w-full h-12 rounded-2xl border-2 ${focus2 ? "outline" : ""}`} onFocus={() => handleInputFocus2()} onChange={e => handleFilter(e.target.value)} />
+                                    <button className=' flex justify-center items-center px-3 text-xl pe-5 pt-2' onClick={() => setFocus2(false)}>{focus2 ? <ImCross /> : <FaSearch />}</button>
+                                </div>
+                                <div className={`bg-white ${focus2 ? "block" : "hidden"} flex flex-col max-h-40 h-auto overflow-y-scroll border-2 rounded-2xl `} style={{
+                                    scrollbarWidth: 'thin',
+                                    scrollbarColor: '#ccc transparent'
+                                }}>
+                                    {inputFilter.map((d, i) => (
+                                        <button key={i} className='p-3' onClick={() => setPlace(d.name)}>
+                                            {d.name}
+                                        </button>
+                                    ))}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div className='p-5 bg-white rounded-2xl h-32'>
+                            <h1 className=' text-2xl'>Date</h1>
+                            <div>
+                                <input type="date" className='my-3 w-full h-12 rounded-2xl border-2' />
+                            </div>
+                        </div>
+                        <button className='bg-blue-900 w-60 text-white rounded-2xl text-3xl font-bold h-full'>Search</button>
                     </div>
                 </div>
+
                 <div className='text-white text-8xl mx-auto mt-48 text-center' >
-                    Explore  Top<br />
+                    Explore Top<br />
                     Destinations To Travel<br />
                     Based On Environmental<br />
                     Condition
@@ -74,7 +139,7 @@ const Home = () => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;

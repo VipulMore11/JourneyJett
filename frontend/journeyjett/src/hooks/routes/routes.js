@@ -32,7 +32,7 @@ const routesConfig = [
       },
       {
         path: '/events',
-        element: <Events/>,
+        element: <Discorver/>,
       },
       {
         path: '/hello',

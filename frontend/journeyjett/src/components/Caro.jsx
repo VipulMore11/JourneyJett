@@ -32,11 +32,11 @@ export default function App() {
       navigation={true}
       pagination={{ clickable: true }}
       scrollbar={{ draggable: true }}
-      className='rounded-2xl h-80'
+      className='rounded-2xl h-100 w-100'
     >
       {destination && destination.images.map(image => (
         <SwiperSlide key={image.id}>
-          <img src={`http://127.0.0.1:8000${image.places_image}`} alt="hii" className='w-full' style={{height:'400px'}} />
+          <img src={`http://127.0.0.1:8000${image.places_image}`} alt="hii" className='w-full h-full'  />
         </SwiperSlide>
       ))}
     </Swiper>

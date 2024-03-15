@@ -43,16 +43,16 @@ const Place = () => {
 
     return (
         <>
-            <div className='md:h-full w-screen'>
-                <div className='mx-20'>
-                    <h1 className='text-7xl font-bold text-white my-7'>{data.name}</h1>
-                    <div className='p-10 rounded-2xl' style={{ backgroundColor: '#081b33' }}>
+            <div className='md:h-full xl:mx-40'>
+                <div className='md:mx-20 mx-4 '>
+                    <h1 className='lg:text-7xl sm:text-5xl text-3xl font-bold text-white my-7'>{data.name}</h1>
+                    <div className='md:p-10 p-4 rounded-2xl' style={{ backgroundColor: '#081b33' }}>
                         <Caro />
                         <div className='text-white mt-5'>
                             <div className='mt-5'>
-                                <h1 className='text-7xl'>Description</h1>
-                                <h1 className='text-xl font-thin my-4 text-gray-400'>{data.country}</h1>
-                                <h1 className='text-xl'>{data.info}</h1>
+                                <h1 className='md:text-7xl text-4xl'>Description</h1>
+                                <h1 className='md:text-xl text-base font-thin my-4 text-gray-400'>{data.country}</h1>
+                                <h1 className='md:text-xl text-base'>{data.info}</h1>
                                 <div className='flex justify-between mt-5'>
                                     <button onClick={handleBookmark}>{Bookmark ? <FaBookmark className='size-14' /> : <CiBookmark className='size-14' />}</button>
                                     <button className='bg-yellow-400 my-4 text-black font-bold h-12 flex items-center p-4 rounded-xl'>Add to Plan</button>

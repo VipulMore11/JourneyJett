@@ -34,10 +34,6 @@ const routesConfig = [
         path: '/events',
         element: <Discorver/>,
       },
-      {
-        path: '/hello',
-        element: <Hello/>,
-      },
     ],
   },
   {
@@ -47,6 +43,10 @@ const routesConfig = [
   {
     path: '/signup',
     element: <Register/>,
+  },
+  {
+    path: '/hello',
+    element: <Hello/>,
   },
 ];
 

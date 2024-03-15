@@ -8,6 +8,7 @@ import Events from '../../pages/Events';
 import Login from '../../pages/login/login';
 import Register from '../../pages/register/register';
 import Hello from "../../pages/Hello"
+import Profile from "../../pages/Profile"
 
 const routesConfig = [
   {
@@ -25,6 +26,10 @@ const routesConfig = [
       {
         path: '/explore',
         element: <Explore />,
+      },
+      {
+        path: '/profile',
+        element: <Profile/>,
       },
       {
         path: '/discover',

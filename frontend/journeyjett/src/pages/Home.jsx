@@ -12,14 +12,14 @@ import { ImCross } from "react-icons/im";
 import { FaSearch } from "react-icons/fa";
 import axios from 'axios';
 
+import { jwtDecode } from 'jwt-decode';
+
 const Home = () => {
     const [input, setInput] = useState([]);
     const [inputFilter, setInputFilter] = useState([]);
     const [focus1, setFocus1] = useState(false);
     const [focus2, setFocus2] = useState(false);
     const [place, setPlace] = useState('');
-
-
 
     const handleInputFocus1 = () => {
         setFocus1(true);
@@ -36,7 +36,7 @@ const Home = () => {
             try {
                 const res = await axios.get('http://127.0.0.1:8000/get_destinations/');
                 setInput(res.data);
-                console.log(res.data[2].state);
+                // console.log(res.data[2].state);
             } catch (error) {
                 console.log(error);
             }
@@ -47,6 +47,41 @@ const Home = () => {
         const response = input.filter(f => f.name.includes(value));
         setInputFilter(response);
     };
+
+
+
+    // Testing 
+
+
+    const [islogin, setislogin] = useState(false);
+    const [isuser, setisUser] = useState(false);
+    const [onpage, setPage] = useState('');
+
+    const getUserInfoFromToken = (token) => {
+        try {
+            const decodedToken = jwtDecode(token);
+            const { user_id } = decodedToken;  // Assuming username and email are stored in the token payload
+            return { user_id };
+        } catch (error) {
+            console.error('Error decoding JWT token:', error);
+            return null;
+        }
+    };
+
+    const token = localStorage.getItem('refresh_token');  // Replace with the actual token
+    const userInfo = getUserInfoFromToken(token)
+    useEffect(() => {
+        if (userInfo) {
+            setisUser(userInfo.user_id)
+            // setisUser(userInfo)
+        }
+    }, [userInfo])
+    console.log(isuser)
+    
+    useEffect(() => {
+        const refreshToken = localStorage.getItem('refresh_token');
+        setislogin(!!refreshToken); // Set true if refreshToken exists, false otherwise
+    }, []);
 
     return (
         <>
@@ -62,8 +97,8 @@ const Home = () => {
                         <div className='p-5 bg-white rounded-2xl h-32'>
                             <h1 className='text-2xl'>From</h1>
                             <div>
-                            <div className='flex flex-row border-2 rounded-2xl'>
-                                    <input type="text" className={` w-full h-12 rounded-2xl border-2 ${focus1 ? "outline" : ""}`} onFocus={() => handleInputFocus1()} onChange={e => handleFilter(e.target.value)} />
+                                <div className='flex flex-row border-2 rounded-2xl'>
+                                    <input type="text" className={` w-full h-12 rounded-2xl border-2 ${focus1 ? "outline" : ""}`} onFocus={() => handleInputFocus1()} onChange={(e) => handleFilter(e.target.value)} />
                                     <button className=' flex justify-center items-center px-3 text-xl pe-5 pt-2' onClick={() => setFocus1(false)}>{focus1 ? <ImCross /> : <FaSearch />}</button>
                                 </div>
                                 <div className={`bg-white ${focus1 ? "block" : "hidden"} flex flex-col max-h-40 h-auto overflow-y-scroll border-2 rounded-3xl `} style={{

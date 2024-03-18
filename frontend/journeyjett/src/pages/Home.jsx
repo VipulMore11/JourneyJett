@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import bg from "../assets/bg pic.svg";
-import Search from "../components/Search";
 import rect from "../assets/Rectangle 19.svg";
 import wildlife from "../assets/Wildlife.jpg";
 import adventure from "../assets/adventure.jpg";
@@ -39,7 +38,7 @@ const Home = () => {
             try {
                 const res = await axios.get('http://127.0.0.1:8000/get_destinations/');
                 setInput(res.data);
-                // console.log(res.data[2].state);
+                
             } catch (error) {
                 console.log(error);
             }
@@ -113,7 +112,7 @@ const Home = () => {
                                     scrollbarColor: '#ccc transparent'
                                 }}>
                                     {inputFilter.map((d, i) => (
-                                        <button key={i} className='p-3' onClick={() => handlevalue(d.name)}>
+                                        <button key={i} className='p-3' >
                                             {d.name}
                                         </button>
                                     ))}
@@ -133,7 +132,7 @@ const Home = () => {
                                     scrollbarColor: '#ccc transparent'
                                 }}>
                                     {inputFilter.map((d, i) => (
-                                        <button key={i} className='p-3' onClick={() => setPlace(d.name)}>
+                                        <button key={i} className='p-3' onClick={() => handlevalue(d.name)}>
                                             {d.name}
                                         </button>
                                     ))}

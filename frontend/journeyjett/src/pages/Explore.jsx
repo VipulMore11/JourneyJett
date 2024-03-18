@@ -25,7 +25,6 @@ const Explore = () => {
     const [filter, setFilter] = useState([]);
     const [check, setCheck] = useState(true);
     const [showfilter, setShowFilter] = useState(false);
-    
 
     useEffect(() => {
         async function getdata() {

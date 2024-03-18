@@ -3,25 +3,56 @@ import axios from 'axios';
 import Place_card from '../components/Place_card';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useLocation } from 'react-router-dom';
 mapboxgl.accessToken = 'pk.eyJ1Ijoic29oYW0xMiIsImEiOiJjbG5mMThidXcwa2o4Mml0Y3IzMHh0ZzM1In0.NKrFUG12iisWBbf-TVp34g';
 
 const Explore = () => {
+
+    const location = useLocation()
+    const [homefilter, setHomefilter] = useState('')
+
+    useEffect(() => {
+        if (location.state && location.state.v1) {
+            setHomefilter(location.state.v1)
+            console.log("v1", location.state.v1)
+        }
+    }, [location.state])
+
+
+
     const [lineCoordinates, setlineCoordinates] = useState([]);
     const [data, setData] = useState([]);
     const [filter, setFilter] = useState([]);
     const [check, setCheck] = useState(true);
     const [showfilter, setShowFilter] = useState(false);
+    
 
     useEffect(() => {
         async function getdata() {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/get_places/?filter=${filter}`);
+                const response = await axios.get(`http://127.0.0.1:8000/get_destinations/?state=${homefilter}`);
                 setData(response.data);
+                console.log(response.data);
+            }
+            catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        getdata();
+    }, [homefilter])
+
+    useEffect(() => {
+        async function getdata() {
+            try {
+                {
+                    const response = await axios.get(`http://127.0.0.1:8000/get_places/?filter=${filter}`);
+                    setData(response.data);
+                    console.log(response.data);
+                }
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
-
         getdata();
     }, [filter]);
 
@@ -107,7 +138,7 @@ const Explore = () => {
                 <div className='md:col-span-6 col-span-8'>
                     <div className='bg-gray-800 h-auto w-100 mb-10'>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <style>{`
+                            <style>{`
         .mapBox {
           width: 100%; 
           height: 50vh; 
@@ -127,11 +158,17 @@ const Explore = () => {
                         </div>
                     </div>
                     <div className='grid lg:grid-cols-3 grid-cols-2 gap-5 rounded-xl'>
-                        {data.map((d) => (
+                        {/* {data.map((d) => (
                             <div key={d.name}>
                                 <Place_card place={d.id} img={d.images[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
                             </div>
+                        ))} */}
+                        {data.map((d) => (
+                            <div key={d.name}>
+                                <Place_card place={d.id} img={d.images?.[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
+                            </div>
                         ))}
+
                     </div>
                 </div>
             </div>

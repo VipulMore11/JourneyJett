@@ -11,12 +11,15 @@ import pilgrimage from "../assets/Pilgrimage.jpg";
 import { ImCross } from "react-icons/im";
 import { FaSearch } from "react-icons/fa";
 import axios from 'axios';
-
 import { jwtDecode } from 'jwt-decode';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Home = () => {
+
+    const navigate = useNavigate()
     const [input, setInput] = useState([]);
     const [inputFilter, setInputFilter] = useState([]);
+    const [v1, setV1] = useState("");
     const [focus1, setFocus1] = useState(false);
     const [focus2, setFocus2] = useState(false);
     const [place, setPlace] = useState('');
@@ -48,40 +51,44 @@ const Home = () => {
         setInputFilter(response);
     };
 
-
-
+    const handlevalue = (value) => {
+        setV1(value);
+        console.log("v1:", value); // Log the value here
+        navigate('/explore', { state: { v1: value } });
+    }
+    
     // Testing 
 
 
-    const [islogin, setislogin] = useState(false);
-    const [isuser, setisUser] = useState(false);
-    const [onpage, setPage] = useState('');
+    // const [islogin, setislogin] = useState(false);
+    // const [isuser, setisUser] = useState(false);
+    // const [onpage, setPage] = useState('');
 
-    const getUserInfoFromToken = (token) => {
-        try {
-            const decodedToken = jwtDecode(token);
-            const { user_id } = decodedToken;  // Assuming username and email are stored in the token payload
-            return { user_id };
-        } catch (error) {
-            console.error('Error decoding JWT token:', error);
-            return null;
-        }
-    };
+    // const getUserInfoFromToken = (token) => {
+    //     try {
+    //         const decodedToken = jwtDecode(token);
+    //         const { user_id } = decodedToken;  // Assuming username and email are stored in the token payload
+    //         return { user_id };
+    //     } catch (error) {
+    //         console.error('Error decoding JWT token:', error);
+    //         return null;
+    //     }
+    // };
 
-    const token = localStorage.getItem('refresh_token');  // Replace with the actual token
-    const userInfo = getUserInfoFromToken(token)
-    useEffect(() => {
-        if (userInfo) {
-            setisUser(userInfo.user_id)
-            // setisUser(userInfo)
-        }
-    }, [userInfo])
-    console.log(isuser)
+    // const token = localStorage.getItem('refresh_token');  // Replace with the actual token
+    // const userInfo = getUserInfoFromToken(token)
+    // useEffect(() => {
+    //     if (userInfo) {
+    //         setisUser(userInfo.user_id)
+    //         // setisUser(userInfo)
+    //     }
+    // }, [userInfo])
+    // console.log(isuser)
     
-    useEffect(() => {
-        const refreshToken = localStorage.getItem('refresh_token');
-        setislogin(!!refreshToken); // Set true if refreshToken exists, false otherwise
-    }, []);
+    // useEffect(() => {
+    //     const refreshToken = localStorage.getItem('refresh_token');
+    //     setislogin(!!refreshToken); // Set true if refreshToken exists, false otherwise
+    // }, []);
 
     return (
         <>
@@ -106,7 +113,7 @@ const Home = () => {
                                     scrollbarColor: '#ccc transparent'
                                 }}>
                                     {inputFilter.map((d, i) => (
-                                        <button key={i} className='p-3' onClick={() => setPlace(d.name)}>
+                                        <button key={i} className='p-3' onClick={() => handlevalue(d.name)}>
                                             {d.name}
                                         </button>
                                     ))}

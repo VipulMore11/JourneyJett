@@ -4,46 +4,48 @@ import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import Filter from '../components/Text/Filter';
 
 const Hello = () => {
+
+    const category = [{ id: 1, name: "Ui/Ux" }, { id: 2, name: "Development" }, { id: 3, name: "Finance" }, { id: 4, name: "Technology" }, { id: 5, name: "Research" }, { id: 6, name: "Senior Level" }]
+    const sort = [{ id: 1, name: "Work" }, { id: 2, name: "Work From Home" }, { id: 3, name: "Freelance" }]
+    const role = [{ id: 1, name: "Developer" }, { id: 2, name: "Accounting & Taxation" }, { id: 3, name: "Production and Manufacture" }]
+    const industry = [{ id: 1, name: "Chemical" }, { id: 2, name: "Textile & Apperal" }, { id: 3, name: "Corporate" }]
     return (
         <div className='grid md:grid-cols-10 gap-5  p-5'>
-            <div className='filter col-span-3 border-2 text-black xl:p-6 h-auto md:p-3 md:block hidden' style={{backgroundColor:'#f7f8f2', boxShadow:' 5px 10px 15px gray'}}>
+            <div className='filter col-span-3 border-2 text-black xl:p-6 h-auto md:p-3 md:block hidden' style={{ backgroundColor: '#f7f8f2', boxShadow: ' 5px 10px 15px gray' }}>
                 <HiAdjustmentsHorizontal className='size-10' />
                 <div className='my-8' >
                     <h1 className='xl:text-3xl md:text-2xl'>Category</h1>
                     <div className='grid xl:grid-cols-3 md:grid-cols-2 my-4 xl:gap-4 md:gap-2'>
-                        <Filter value={"Ui/Ux"} />
-                        <Filter value={"Development"} />
-                        <Filter value={"Finance"} />
-                        <Filter value={"Technology"} />
-                        <Filter value={"Research"} />
-                        <Filter value={"Senior Level"} />
+                        {category.map((d) => (
+                            <div key={category.id}><Filter value={`${d.name}`} /></div>
+                        ))}
                     </div>
                 </div>
                 <div className='bg-gray-500 h-1 rounded-full'></div>
                 <div className='my-8'>
                     <h1 className='xl:text-3xl md:text-2xl'>Sort</h1>
                     <div className='flex flex-col text-xl py-2 xl:mx-6 md:mx-2 gap-1'>
-                        <div ><input type="checkbox" className='xl:size-4 md:size-3' id="work" /><label htmlFor="work" className='xl:mx-3 md:mx-2 md:text-lg'>Work</label></div>
-                        <div><input type="checkbox" className='xl:size-4 md:size-3' id="work from home" /><label htmlFor="work from home" className='xl:mx-3 md:mx-2 md:text-lg'>Work from home</label></div>
-                        <div><input type="checkbox" className='xl:size-4 md:size-3' id="work" /><label htmlFor="work" className='xl:mx-3 md:mx-2 md:text-lg'>Freelance</label></div>
+                        {sort.map((d) => (
+                            <div key={d.id}><input type="checkbox" className='xl:size-4 md:size-3' id={d.name} /><label htmlFor={d.name} className='xl:mx-3 md:mx-2 md:text-lg'>{d.name}</label></div>
+                        ))}
                     </div>
                 </div>
                 <div className='bg-gray-500 h-1 rounded-full'></div>
                 <div className='my-8'>
                     <h1 className='xl:text-3xl md:text-2xl'>Role category</h1>
                     <div className='flex flex-col text-xl py-2 xl:mx-6 md:mx-2 gap-1'>
-                        <div ><input type="checkbox" className='xl:size-4 md:size-3' id="work" /><label htmlFor="work" className='xl:mx-3 md:mx-2 md:text-lg'>Developer</label></div>
-                        <div><input type="checkbox" className='xl:size-4 md:size-3' id="work from home" /><label htmlFor="work from home" className='xl:mx-3 md:mx-2 md:text-lg'>Accounting & Taxation</label></div>
-                        <div><input type="checkbox" className='xl:size-4 md:size-3' id="work" /><label htmlFor="work" className='xl:mx-3 md:mx-2 md:text-lg'>Production & Manufacture</label></div>
+                        {role.map((d) => (
+                            <div key={d.id}><input type="checkbox" className='xl:size-4 md:size-3' id={d.name} /><label htmlFor={d.name} className='xl:mx-3 md:mx-2 md:text-lg'>{d.name}</label></div>
+                        ))}
                     </div>
                 </div>
                 <div className='bg-gray-500 h-1 rounded-full'></div>
                 <div className='my-8'>
                     <h1 className='xl:text-3xl md:text-2xl'>Industry</h1>
                     <div className='flex flex-col text-xl py-2 xl:mx-6 md:mx-2 gap-1'>
-                        <div ><input type="checkbox" className='xl:size-4 md:size-3' id="work" /><label htmlFor="work" className='xl:mx-3 md:mx-2 md:text-lg'>Chemical</label></div>
-                        <div><input type="checkbox" className='xl:size-4 md:size-3' id="work from home" /><label htmlFor="work from home" className='xl:mx-3 md:mx-2 md:text-lg'>Textile & Apparal</label></div>
-                        <div><input type="checkbox" className='xl:size-4 md:size-3' id="work" /><label htmlFor="work" className='xl:mx-3 md:mx-2 md:text-lg'>corporate</label></div>
+                        {industry.map((d) => (
+                            <div key={d.id}><input type="checkbox" className='xl:size-4 md:size-3' id={d.name} /><label htmlFor={d.name} className='xl:mx-3 md:mx-2 md:text-lg'>{d.name}</label></div>
+                        ))}
                     </div>
                 </div>
             </div>

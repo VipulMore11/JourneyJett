@@ -34,7 +34,7 @@ const Login = () => {
             axiosInstance.defaults.headers["Authorization"] =
                 "Bearer " + localStorage.getItem("access_token");
 
-            navigate("/");
+            navigate("/profile");
         } catch (error) {
             console.error("Error:", error);
             toast.error("Error: Check Your Credentials");

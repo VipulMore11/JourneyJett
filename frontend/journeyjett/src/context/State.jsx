@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ExampleContext from './Context';
 import { jwtDecode } from 'jwt-decode';
-import { Navigate, useNavigate } from 'react-router-dom';
 
 const State = (props) => {
   const [userid, setUserid] = useState(null);

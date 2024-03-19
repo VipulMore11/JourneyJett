@@ -1,10 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import logo from "../assets/logojet-removebg-preview 1.svg"
 import { Link } from 'react-router-dom';
+import ExampleContext from '../context/Context';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+
+  const {isLogin} = useContext(ExampleContext) 
+  const navigate = useNavigate()
+  const { username } = useContext(ExampleContext)
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const handlesignout = ()=> {
+    localStorage.clear();
+    navigate('/login')
+    
+  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -50,6 +62,8 @@ const Navbar = () => {
             <li>
               <Link to="/login" className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent  md:p-0 md:dark:hover:text-blue-900 text-white dark:hover:text-white md:dark:hover:bg-transparent">Login</Link>
             </li>
+            <button className='text-white'>{isLogin ? username : "Guest"}</button>
+            <button className='text-white' onClick={handlesignout}>{isLogin ? "Log Out" : "Login"}</button>
           </ul>
         </div>
       </div>

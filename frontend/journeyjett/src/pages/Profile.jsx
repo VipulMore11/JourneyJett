@@ -1,9 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Profile = () => {
     const [image, setImage] = useState("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwyfHxhdmF0YXJ8ZW58MHwwfHx8MTY5MTg0NzYxMHww&ixlib=rb-4.0.3&q=80&w=1080");
+    const [data, setData] = useState("")
+    useEffect(() => {
+        async function getdata() {
 
+            const token = localStorage.getItem("access_token");
 
+            try {
+                const res = await axios.get('http://127.0.0.1:8000/profile/', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                setData(res.data)
+                console.log("data is", res.data)
+            }
+            catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        getdata();
+    }, [])
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -43,7 +63,7 @@ const Profile = () => {
         top: 0,
         background: '#fff',
         right: isHovered ? '0' : '-100%',
-        width: '30%', // Adjust the width as needed
+        width: '30%',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -57,7 +77,7 @@ const Profile = () => {
         top: 0,
         background: '#fff',
         right: doneisHovered ? '0' : '-100%',
-        width: '30%', // Adjust the width as needed
+        width: '30%',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -84,20 +104,22 @@ const Profile = () => {
     };
 
     return (
-        <div className='text-white h-auto mx-11'>
+        <div className='text-white h-auto mx-60'>
             <div className='h-auto rounded-xl p-9 my-12' style={{ backgroundColor: '#101c34', display: 'flex' }}>
-                <div className="p-2">
+                <div className="px- flex justify-center flex-col">
                     <img
                         src={image}
                         className="w-60 h-60 mx-20 my-8 object-center object-cover rounded-full transition-all duration-500 delay-500 transform"
                         alt="Profile Image"
                     />
-                    <input
+                    <label htmlFor="img"><input
                         type="file"
                         accept="image/*"
+                        className='hidden'
                         onChange={handleImageChange}
                         style={{ display: 'block', margin: 'auto', marginTop: '10px' }}
-                    />
+                    /></label>
+                    <button className='bg-gray-600 p-3' id='img'>Data</button>
                 </div>
                 <div className="p-2 flex flex-col  flex-grow">
                     <h1 className="text-gray-600 dark:text-gray-200 font-bold" style={{ fontSize: "65px", fontFamily: 'Josefin Sans, sans-serif' }}>
@@ -111,6 +133,7 @@ const Profile = () => {
                             type="text"
                             name="name"
                             id="name"
+                            value={data.username}
                             placeholder="Full Name"
                             className="w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                         />
@@ -122,6 +145,7 @@ const Profile = () => {
                         <input
                             type="email"
                             name="email"
+                            value={data.email}
                             id="email"
                             placeholder="email"
                             className="w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
@@ -135,6 +159,7 @@ const Profile = () => {
                             type="number"
                             name="mobile"
                             id="mobile"
+                            value={data.phone_number}
                             placeholder="Enter your mobile number"
                             className="w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                         />

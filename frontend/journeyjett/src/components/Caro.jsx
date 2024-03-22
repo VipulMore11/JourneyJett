@@ -14,7 +14,6 @@ export default function App() {
       try {
         const response = await axios.get('http://127.0.0.1:8000/get_places/');
         setData(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

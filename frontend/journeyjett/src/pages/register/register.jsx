@@ -55,7 +55,7 @@ const Register = () => {
 
     return (
         <div className='h-screen p-10 overflow-hidden' style={{ backgroundColor: '#051120' }}>
-            <div className='lg:h-full w-100 flex flex-row xl:mx-60 mx-2 rounded-3xl' style={{ backgroundColor: '#22405b' }}>
+            <div className='lg:h-full w-100 flex flex-row xl:mx-48 mx-2 rounded-3xl' style={{ backgroundColor: '#22405b' }}>
                 <img src={img} alt="Login Image" className='rounded hidden lg:block' />
                 <div className='text-white flex  items-center w-full flex-col'>
                     <h1 className=' md:text-4xl text-2xl mt-8 italic border-4 border-white p-8 md:p-8 lg:p-2 xl:p-8 rounded-3xl h-min lg:w-96 w-auto  flex justify-center items-center md:mt-8 font-medium'>Journey Jett</h1>

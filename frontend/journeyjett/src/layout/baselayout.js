@@ -10,7 +10,7 @@ function BaseLayout() {
         <nav className="">
           <Navbar/>
         </nav>
-        <div className="pt-24 overflow-x-hidden" style={{ backgroundColor: '#051120' }}>
+        <div className=" overflow-x-hidden" style={{ backgroundColor: '#051120' }}>
           <Outlet />
           <Footer/>
         </div>

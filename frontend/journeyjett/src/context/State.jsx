@@ -27,7 +27,6 @@ const State = (props) => {
           setIsuser(userInfo.user_id)
         }
     }, [userInfo])
-    console.log(isuser)
 
     const contextValue = {
       username:username,

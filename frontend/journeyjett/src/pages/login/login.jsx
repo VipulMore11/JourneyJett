@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import img from "../../assets/login img.svg";
 import { FaGoogle } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
@@ -9,10 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import ExampleContext from '../../context/Context';
 
 const Login = () => {
     const navigate = useNavigate();
-
+    const {isLogin} = useContext(ExampleContext)
+    console.log(isLogin)
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -34,12 +36,12 @@ const Login = () => {
             axiosInstance.defaults.headers["Authorization"] =
                 "Bearer " + localStorage.getItem("access_token");
 
-            navigate("/profile");
+            navigate('/profile')
         } catch (error) {
             console.error("Error:", error);
             toast.error("Error: Check Your Credentials");
         }
-
+        // window.location.reload();
        
     };
 
@@ -47,7 +49,6 @@ const Login = () => {
 
     return (
         <div className='h-screen p-10 overflow-hidden' style={{ backgroundColor: '#051120' }}>
-            <button className='text-white' onClick={() => navigate(-1)}>Back</button>
             <div className='lg:h-full w-100 align flex flex-row  xl:mx-48 mx-2 rounded-3xl' style={{ backgroundColor: '#22405b' }}>
                 <img src={img} alt="hi" className='rounded hidden lg:block' />
                 <div className='text-white flex  items-center w-full flex-col'>

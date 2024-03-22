@@ -1,22 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import ExampleContext from '../context/Context';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../axios';
 
 const Profile = () => {
     const [image, setImage] = useState("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwyfHxhdmF0YXJ8ZW58MHwwfHx8MTY5MTg0NzYxMHww&ixlib=rb-4.0.3&q=80&w=1080");
-    const [data, setData] = useState("")
+    const { isLogin } = useContext(ExampleContext)
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        phone_number: "",
+        profile_image: ""
+    });
+
+    const handleupdate = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+    const submitupdate = async (e) => {
+        try {
+            await axiosInstance.post(`http://127.0.0.1:8000/update_profile/`, formData);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+        setUpdate(true) 
+    };
+    const navigate = useNavigate()
     useEffect(() => {
         async function getdata() {
 
             const token = localStorage.getItem("access_token");
 
             try {
-                const res = await axios.get('http://127.0.0.1:8000/profile/', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                setData(res.data)
-                console.log("data is", res.data)
+                const res = await axiosInstance.get('http://127.0.0.1:8000/profile/')
+                setFormData(res.data)
             }
             catch (error) {
                 console.error("Error fetching data:", error);
@@ -24,6 +42,10 @@ const Profile = () => {
         }
         getdata();
     }, [])
+
+    const [update, setUpdate] = useState(true)
+
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -35,13 +57,9 @@ const Profile = () => {
         if (file) {
             reader.readAsDataURL(file);
         }
-
-
-
     };
 
     const host = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/397014/';
-
     const [isHovered, setIsHovered] = useState(false);
     const [doneisHovered, donesetIsHovered] = useState(false);
 
@@ -103,6 +121,13 @@ const Profile = () => {
         donesetIsHovered(false);
     };
 
+    const fileInputRef = useRef(null);
+
+    const handleButtonClick = () => {
+        fileInputRef.current.click();
+    };
+    console.log("image is",image)
+
     return (
         <div className='text-white h-auto mx-60'>
             <div className='h-auto rounded-xl p-9 my-12' style={{ backgroundColor: '#101c34', display: 'flex' }}>
@@ -112,31 +137,34 @@ const Profile = () => {
                         className="w-60 h-60 mx-20 my-8 object-center object-cover rounded-full transition-all duration-500 delay-500 transform"
                         alt="Profile Image"
                     />
-                    <label htmlFor="img"><input
+                    <label htmlFor="image"><input
                         type="file"
-                        accept="image/*"
-                        className='hidden'
+                        ref={fileInputRef}
                         onChange={handleImageChange}
-                        style={{ display: 'block', margin: 'auto', marginTop: '10px' }}
+                        onChangeCapture={() => { console.log('Changed value') }}
+                        style={{ display: 'none', margin: 'auto', marginTop: '10px' }}
                     /></label>
-                    <button className='bg-gray-600 p-3' id='img'>Data</button>
+                    <button className='bg-gray-600 p-3' id='image' onClick={handleButtonClick}>Data</button>
                 </div>
                 <div className="p-2 flex flex-col  flex-grow">
                     <h1 className="text-gray-600 dark:text-gray-200 font-bold" style={{ fontSize: "65px", fontFamily: 'Josefin Sans, sans-serif' }}>
                         About me
                     </h1>
                     <div className='my-5'>
-                        <label htmlFor="name" className="mb-3 block text-base font-light text-white" style={{ fontSize: "30px" }}>
+                        <label htmlFor="name" className='mb-3 block text-base font-light text-white' style={{ fontSize: "30px" }}>
                             Username
                         </label>
                         <input
                             type="text"
-                            name="name"
+                            name="username"
+                            value={formData.username}
+                            onChange={(e)=>{handleupdate(e)}}
                             id="name"
-                            value={data.username}
                             placeholder="Full Name"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                            disabled={update ? true : false}
+                            className={`  w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium ${update ? 'text-[#6B7280]' : 'text-black'}  outline-none focus:border-[#6A64F1] focus:shadow-md`}
                         />
+
                     </div>
                     <div className='my-5'>
                         <label htmlFor="email" className="mb-3 block text-base font-light text-white" style={{ fontSize: "30px" }}>
@@ -145,10 +173,12 @@ const Profile = () => {
                         <input
                             type="email"
                             name="email"
-                            value={data.email}
+                            value={formData.email}
+                            // onChange={(e)=>{handleupdate(e)}}
                             id="email"
                             placeholder="email"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                            disabled={true}
+                            className={` w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium text-[#6B7280]  outline-none focus:border-[#6A64F1] focus:shadow-md`}
                         />
                     </div >
                     <div className='my-5'>
@@ -157,15 +187,21 @@ const Profile = () => {
                         </label>
                         <input
                             type="number"
-                            name="mobile"
+                            name="phone_number"
                             id="mobile"
-                            value={data.phone_number}
+                            value={formData.phone_number}
+                            onChange={(e)=>{handleupdate(e)}}
                             placeholder="Enter your mobile number"
-                            className="w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                            disabled={update ? true : false}
+                            className={` w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium ${update ? 'text-[#6B7280]' : 'text-black '}  outline-none focus:border-[#6A64F1] focus:shadow-md`}
                         />
                     </div>
                     <div className="mt-8 flex justify-end">
-                        <button className="bg-teal-500 text-black px-10 py-3 rounded-full hover:bg-teal-700 dark:bg-[#54E6E6] dark:text-dark dark:hover:bg-teal-900 font-bold">SAVE</button>
+                        {update ?
+                            <button className="bg-teal-500 text-black px-10 py-3 rounded-full hover:bg-teal-700 dark:bg-[#54E6E6] dark:text-dark dark:hover:bg-teal-900 font-bold" onClick={() => { setUpdate(false) }}>Update Profile</button> :
+                            <button className="bg-teal-500 text-black px-10 py-3 rounded-full hover:bg-teal-700 dark:bg-[#54E6E6] dark:text-dark dark:hover:bg-teal-900 font-bold" onClick={() => { submitupdate() }}>SAVE</button>
+                        }
+
                     </div>
                 </div>
             </div>

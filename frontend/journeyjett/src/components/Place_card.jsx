@@ -15,7 +15,7 @@ const Place_card = (props) => {
     <div className=''>
       <Link to={`/places/${props.place}`}>
         <div className="w-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <img className="rounded-t-lg xl:h-60 h-36 sm:h-52 md:h-48 lg:h-42 w-full " src={`http://127.0.0.1:8000${props.img}`} alt="hii" />
+          <img className={`rounded-t-lg ${props.height} w-full `} src={`http://127.0.0.1:8000${props.img}`} alt="hii" />
           <div className="p-3">
             <h5 className="mb-2 sm:text-2xl text-base font-bold tracking-tight text-gray-900 dark:text-white">{props.title}</h5>
             <p className="mb-1 font-normal text-sm sm:text-base text-gray-700 dark:text-gray-400">{truncateString(props.desc, 60)}</p>

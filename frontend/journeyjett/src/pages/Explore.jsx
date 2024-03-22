@@ -45,8 +45,9 @@ const Explore = () => {
             try {
                 {
                     const response = await axios.get(`http://127.0.0.1:8000/get_places/?filter=${filter}`);
+                    // const response = await axios.get(`http://127.0.0.1:8000/get_places/?id=1`);
                     setData(response.data);
-                    console.log(response.data);
+                    console.log("specific data",response.data);
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -164,7 +165,7 @@ const Explore = () => {
                         ))} */}
                         {data.map((d) => (
                             <div key={d.name}>
-                                <Place_card place={d.id} img={d.images?.[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
+                                <Place_card place={d.id} height={"xl:h-60 h-36 sm:h-52 md:h-48 lg:h-42"} img={d.images?.[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
                             </div>
                         ))}
 

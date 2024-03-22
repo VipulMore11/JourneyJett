@@ -4,7 +4,9 @@ import axios from 'axios';
 import Caro from "../components/Caro"
 import { FaBookmark } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
+import axiosInstance from '../axios';
 import img from "../assets/Rectangle 19.svg"
+import Recommendation from '../components/Recommendation';
 
 const Place = () => {
     const { id } = useParams()
@@ -16,9 +18,8 @@ const Place = () => {
     useEffect(() => {
         async function getdata() {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/get_places/?id=${id}`);
+                const response = await axiosInstance.get(`http://127.0.0.1:8000/get_places/?id=${id}`);
                 setData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -91,9 +92,7 @@ const Place = () => {
                     <div className='my-7 p-10 text-white rounded-2xl' style={{ backgroundColor: '#081b33' }}>
                         <h1 className=' font-bold text-4xl my-4'>Find Best Location On The Basis Of Liking</h1>
                         <div className='grid grid-cols-3 gap-3 p-12'>
-                            <Link to=""><img src={img} alt="hi" /></Link>
-                            <Link to=""><img src={img} alt="hi" /></Link>     
-                            <Link to=""><img src={img} alt="hi" /></Link>     
+                            <Recommendation/>
                         </div>
                     </div>
                 </div>

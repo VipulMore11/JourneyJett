@@ -12,7 +12,7 @@ import Profile from "../../pages/Profile"
 
 const routesConfig = [
   {
-    path: '', // Use an empty string for the root route
+    path: '', // Use an empty roostring for the t route
     element: <BaseLayout />,
     children: [
       {
@@ -36,18 +36,18 @@ const routesConfig = [
         element: <Discorver/>,
       },
       {
-        path: '/events',
+        path: '/discover',
         element: <Discorver/>,
       },
+      {
+        path: '/login',
+        element: <Login/>,
+      },
+      {
+        path: '/signup',
+        element: <Register/>,
+      },
     ],
-  },
-  {
-    path: '/login',
-    element: <Login/>,
-  },
-  {
-    path: '/signup',
-    element: <Register/>,
   },
   {
     path: '/hello',

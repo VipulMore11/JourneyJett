@@ -13,13 +13,9 @@ const Explore = () => {
 
     useEffect(() => {
         if (location.state && location.state.v1) {
-            setHomefilter(location.state.v1)
-            console.log("v1", location.state.v1)
+            setHomefilter(location.state.v1);
         }
-    }, [location.state])
-
-
-
+    }, [location.state]);
     const [lineCoordinates, setlineCoordinates] = useState([]);
     const [data, setData] = useState([]);
     const [filter, setFilter] = useState([]);
@@ -31,7 +27,6 @@ const Explore = () => {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/get_destinations/?state=${homefilter}`);
                 setData(response.data);
-                console.log(response.data);
             }
             catch (error) {
                 console.error("Error fetching data:", error);
@@ -45,9 +40,7 @@ const Explore = () => {
             try {
                 {
                     const response = await axios.get(`http://127.0.0.1:8000/get_places/?filter=${filter}`);
-                    // const response = await axios.get(`http://127.0.0.1:8000/get_places/?id=1`);
                     setData(response.data);
-                    console.log("specific data",response.data);
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -71,25 +64,45 @@ const Explore = () => {
             container: 'map',
             antialias: true
         });
-
+    
         map.on('load', () => {
             if (lineCoordinates.length > 0) {
                 lineCoordinates.forEach(coordinate => {
                     new mapboxgl.Marker({
                         draggable: false
                     })
-                        .setLngLat({ lng: coordinate[0], lat: coordinate[1] })
+                        .setLngLat({ lng: coordinate[1], lat: coordinate[0] })
                         .addTo(map);
                 });
             }
         });
-
+    
+        map.on('click', 'places', function (e) {
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var description = e.features[0].properties.description;
+    
+            new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(description)
+                .addTo(map);
+        });
+    
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'places', function () {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+    
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'places', function () {
+            map.getCanvas().style.cursor = '';
+        });
+    
         return () => {
             if (map) {
                 map.remove();
             }
         };
-    }, [lineCoordinates]);
+    }, [lineCoordinates]);    
 
     const filters = [
         { name: 'Trending' },
@@ -108,8 +121,7 @@ const Explore = () => {
                 return [...prevFilter, value];
             }
         });
-    };
-
+    };  
     return (
         <div className='h-auto w-100 mt-3 xl:mx-20'>
             <div className='md:hidden'>
@@ -158,14 +170,9 @@ const Explore = () => {
                         </div>
                     </div>
                     <div className='grid lg:grid-cols-3 grid-cols-2 gap-5 rounded-xl'>
-                        {/* {data.map((d) => (
-                            <div key={d.name}>
-                                <Place_card place={d.id} img={d.images[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
-                            </div>
-                        ))} */}
                         {data.map((d) => (
                             <div key={d.name}>
-                                <Place_card place={d.id} height={"xl:h-60 h-36 sm:h-52 md:h-48 lg:h-42"} img={d.images?.[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
+                                <Place_card coordinates={d.location} place={d.id} height={"xl:h-60 h-36 sm:h-52 md:h-48 lg:h-42"} img={d.images?.[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
                             </div>
                         ))}
 

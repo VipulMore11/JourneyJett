@@ -4,7 +4,7 @@ import routesConfig from "./hooks/routes/routes"
 import './App.css'
 const App = () => {
    return (
-    <BrowserRouter>
+    <BrowserRouter scrollToTop={true}>
       <Routes>
         {routesConfig.map((route, index) => (
           <Route

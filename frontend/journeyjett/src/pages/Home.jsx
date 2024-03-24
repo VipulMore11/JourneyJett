@@ -10,8 +10,7 @@ import pilgrimage from "../assets/Pilgrimage.jpg";
 import { ImCross } from "react-icons/im";
 import { FaSearch } from "react-icons/fa";
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
 
@@ -21,7 +20,6 @@ const Home = () => {
     const [v1, setV1] = useState("");
     const [focus1, setFocus1] = useState(false);
     const [focus2, setFocus2] = useState(false);
-    const [place, setPlace] = useState('');
 
     const handleInputFocus1 = () => {
         setFocus1(true);
@@ -52,54 +50,21 @@ const Home = () => {
 
     const handlevalue = (value) => {
         setV1(value);
-        console.log("v1:", value); // Log the value here
+        console.log("v1:", value);
         navigate('/explore', { state: { v1: value } });
     }
     
-    // Testing 
-
-
-    // const [islogin, setislogin] = useState(false);
-    // const [isuser, setisUser] = useState(false);
-    // const [onpage, setPage] = useState('');
-
-    // const getUserInfoFromToken = (token) => {
-    //     try {
-    //         const decodedToken = jwtDecode(token);
-    //         const { user_id } = decodedToken;  // Assuming username and email are stored in the token payload
-    //         return { user_id };
-    //     } catch (error) {
-    //         console.error('Error decoding JWT token:', error);
-    //         return null;
-    //     }
-    // };
-
-    // const token = localStorage.getItem('refresh_token');  // Replace with the actual token
-    // const userInfo = getUserInfoFromToken(token)
-    // useEffect(() => {
-    //     if (userInfo) {
-    //         setisUser(userInfo.user_id)
-    //         // setisUser(userInfo)
-    //     }
-    // }, [userInfo])
-    // console.log(isuser)
-    
-    // useEffect(() => {
-    //     const refreshToken = localStorage.getItem('refresh_token');
-    //     setislogin(!!refreshToken); // Set true if refreshToken exists, false otherwise
-    // }, []);
-
     return (
         <>
             <div className='md:h-auto w-screen'>
                 <div>
                     <img className='relative h-full w-full object-cover' src={bg} alt="bg" />
-                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl font-bold text-center'>
+                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 xl:-translate-y-1/2 -translate-y-full  text-white text-4xl font-bold text-center'>
                         Journey Jett Where Dreams <br /> Take Flight
                     </div>
                 </div>
                 <div className='relative bg-white bg-opacity-25 ' style={{ marginTop: '-50px' }}>
-                    <div className='grid grid-cols-4 py-5 justify-center mx-40 md:gap-10 h-40'>
+                    <div className='grid grid-cols-3 py-5 justify-center xl:mx-40 mx-10 md:gap-10 h-40'>
                         <div className='p-5 bg-white rounded-2xl h-32'>
                             <h1 className='text-2xl'>From</h1>
                             <div>
@@ -140,12 +105,12 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='p-5 bg-white rounded-2xl h-32'>
+                        {/* <div className='p-5 bg-white rounded-2xl h-32'>
                             <h1 className=' text-2xl'>Date</h1>
                             <div>
                                 <input type="date" className='my-3 w-full h-12 rounded-2xl border-2' />
                             </div>
-                        </div>
+                        </div> */}
                         <button className='bg-blue-900 w-60 text-white rounded-2xl text-3xl font-bold h-full'>Search</button>
                     </div>
                 </div>

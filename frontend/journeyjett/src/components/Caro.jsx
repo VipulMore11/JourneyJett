@@ -3,6 +3,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import axios from 'axios';
 import 'swiper/swiper-bundle.css'; 
 import { useParams } from 'react-router-dom';
+import 'swiper/css/navigation';
+import { Navigation , Pagination} from 'swiper/modules';
 
 
 export default function App() {
@@ -27,6 +29,7 @@ export default function App() {
   return (
     <Swiper
       spaceBetween={30}
+      modules={[Pagination,Navigation]}
       slidesPerView={1}
       navigation={true}
       pagination={{ clickable: true }}

@@ -11,10 +11,7 @@ import Recommendation from '../components/Recommendation';
 const Discover = () => {
     return (
         <div className='text-white h-auto mx-11'>
-            <div className='pt-12'>
-                <div className='p-10 h-60' style={{ backgroundImage: `url(${img})`, filter: 'blur(5px)' }}></div>
-                <div className='mx-20 mt-10 transform -translate-y-2/4'><Swiper /></div>
-            </div>
+                <div className='mx-20 my-10 '><Swiper /></div>
             <div className='h-auto rounded-xl p-9 ' style={{ backgroundColor: '#101c34' }}>
                 <h1 className='lg:text-6xl text-3xl'>Best Destination</h1>
                 <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-4 my-12 sm:mx-5 lg:mx-20 justify-items-center'>
@@ -31,7 +28,7 @@ const Discover = () => {
             <div className='h-auto rounded-xl p-9 my-12' style={{ backgroundColor: '#101c34' }}>
                 <h1 className='lg:text-6xl text-3xl'>Recommended</h1>
                 <div className='lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-5 flex flex-row overflow-auto md: my-12 justify-items-center lg:mx-20'>
-                    <Recommendation/>
+                    <Recommendation showIcon={false}/>
                 </div>
             </div>
             <div className='w-full border-2 border-white h-96'></div>

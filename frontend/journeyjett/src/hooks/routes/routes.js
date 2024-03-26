@@ -36,10 +36,6 @@ const routesConfig = [
         element: <Discorver/>,
       },
       {
-        path: '/discover',
-        element: <Discorver/>,
-      },
-      {
         path: '/login',
         element: <Login/>,
       },

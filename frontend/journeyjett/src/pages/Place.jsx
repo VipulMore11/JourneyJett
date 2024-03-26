@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Caro from "../components/Caro"
@@ -39,13 +39,14 @@ const Place = () => {
                 }
                 const res = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=bc0f0dcb734749ecaa1145032242303&q=${data.location[0]},${data.location[1]}&days=5`)
                 setForecast(res.data.forecast.forecastday)
+                console.log(res.data)
             } catch (error) {
                 console.error("Error fetching weather data:", error);
             }
-        } 
+        }
         getWeatherData();
     }, [data]);
-    
+
 
     useEffect(() => {
         async function getdata() {
@@ -69,8 +70,8 @@ const Place = () => {
         getdata();
     }, [id]);
     // console.log("issaved?",saved)
-    
-    
+
+
 
     const handleBookmark = () => {
         axiosInstance.post(`http://127.0.0.1:8000/saved_places/?id=${id}`)
@@ -80,6 +81,32 @@ const Place = () => {
         else {
             setBookmark(false);
         }
+    }
+    const [date, setDate] = useState(null)
+
+    useEffect(() => {
+        async function getdata() {
+            try {
+                if (date == null) {
+                    return;
+                }
+                else {
+                    const res = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=bc0f0dcb734749ecaa1145032242303&q=mumbai&dt=${date}`)
+                    console.log(res.data)
+                    setForecast(res.data.forecast.forecastday)
+                }
+
+            }
+            catch (error) {
+                console.error("Error fetching date data:", error);
+            }
+        }
+        getdata()
+    }, [date])
+
+
+    const handledate = (event) => {
+        setDate(event.target.value)
     }
 
     function truncateString(str, num) {
@@ -113,14 +140,28 @@ const Place = () => {
                         </div>
                     </div>
                     <div className='my-7 p-10 text-white rounded-2xl' style={{ backgroundColor: '#081b33' }}>
-                        <h1 className=' font-bold text-4xl my-4'>Forecast</h1>
-                        <div className=' grid grid-cols-5 text-xl gap-4 text-white mx-12 mb-4' >
+                        <div className='flex gap-10'>
+                            <h1 className=' font-bold text-4xl my-4'>Forecast</h1>
+                            <input type="date" className='text-white border-white border-2 rounded-3xl p-5' onChange={handledate} style={{background:"none"}}/>
+                        </div>
+                        <div className=' grid grid-cols-5 text-xl gap-4 text-white mx-12 my-4' >
                             {forecast && forecast.map((d, i) => (
                                 <div key={i} className='flex justify-center items-center flex-col' >
-                                    <h1 className='text-base text-gray-400'>{d.date}</h1>
-                                    <img src={d.day.condition.icon} alt="hii" />
-                                    <h1>{d.day.condition.text}</h1>
-                                    <h5 className='text-gray-400 text-base'>{d.day.avgtemp_c}°C</h5>
+                                    {date == null ? <><h1 className='text-base text-gray-400'>{d.date}</h1>
+                                        <img src={d.day.condition.icon} alt="hii" />
+                                        <h1>{d.day.condition.text}</h1>
+                                        <h5 className='text-gray-400 text-base'>{d.day.avgtemp_c}°C</h5></>
+                                        : <div className='flex flex-row items-center gap-5'>
+                                            <div>
+                                                <h1 className='text-base text-gray-400'>{d.time}</h1>
+                                                <img src={d.day.condition.icon} alt="hii" />
+                                                <h1>{d.day.condition.text}</h1>
+                                                <h5 className='text-gray-400 text-base'>{d.day.avgtemp_c}°C</h5>
+                                            </div>
+                                            <div className='flex  overflow-ellipsis'>
+                                                {data.best_time === d.day.condition.text ? "Condition Looks Favourable": "Umm, try avoiding the place"}
+                                            </div>
+                                        </div>}
                                 </div>
                             ))}
                         </div>

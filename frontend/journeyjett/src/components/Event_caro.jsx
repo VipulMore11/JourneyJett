@@ -14,7 +14,7 @@ export default function App() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/get_places/');
+        const response = await axios.get('http://127.0.0.1:8000/get_event/');
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -23,8 +23,7 @@ export default function App() {
 
     fetchData();
   }, []);
-
-  const destination = data.find(item => item.id === parseInt(id, 10));
+  console.log(data)
 
   return (
     <Swiper
@@ -36,11 +35,12 @@ export default function App() {
       scrollbar={{ draggable: true }}
       className='rounded-2xl h-100 w-100'
     >
-      {destination && destination.images.map(image => (
-        <SwiperSlide key={image.id}>
-          <img src={`http://127.0.0.1:8000${image.places_image}`} alt="hii" className='w-full h-full'/>
-        </SwiperSlide>
+      {data.map((d)=>(
+        <SwiperSlide key={d.id}>
+        <img src={`http://127.0.0.1:8000${d.photo}`} alt="hii" className='w-full h-full'/>
+      </SwiperSlide>
       ))}
+      
     </Swiper>
   );
 }

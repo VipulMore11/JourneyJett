@@ -36,6 +36,10 @@ const routesConfig = [
         element: <Discorver/>,
       },
       {
+        path: '/events/:id',
+        element: <Events/>,
+      },
+      {
         path: '/login',
         element: <Login/>,
       },

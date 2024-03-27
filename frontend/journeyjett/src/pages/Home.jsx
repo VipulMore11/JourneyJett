@@ -105,12 +105,6 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className='p-5 bg-white rounded-2xl h-32'>
-                            <h1 className=' text-2xl'>Date</h1>
-                            <div>
-                                <input type="date" className='my-3 w-full h-12 rounded-2xl border-2' />
-                            </div>
-                        </div> */}
                         <button className='bg-blue-900 w-60 text-white rounded-2xl text-3xl font-bold h-full'>Search</button>
                     </div>
                 </div>
@@ -125,7 +119,7 @@ const Home = () => {
                     Get professional guidance, practical travel advice, comprehensive destination details, and motivation <br /> from us to plan and reserve your ideal vacation.
                 </div>
                 <div className='grid grid-cols-3 gap-6 mt-10 mx-40 m-10 justify-items-center'>
-                    <img src={wildlife} alt="" className='row-span-1  ' />
+                    <img src={wildlife} alt="" className='row-span-1  '/>
                     <img src={adventure} alt="" className='row-span-1 h-full w-full ' />
                     <img src={beach} alt="" className='row-span-1 h-full w-full ' />
                     <img src={hill} alt="" className='row-span-1 h-full w-full ' />

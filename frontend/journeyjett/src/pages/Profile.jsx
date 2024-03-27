@@ -3,15 +3,18 @@ import axios from 'axios';
 import ExampleContext from '../context/Context';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axios';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 
 const Profile = () => {
-    const [image, setImage] = useState("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwyfHxhdmF0YXJ8ZW58MHwwfHx8MTY5MTg0NzYxMHww&ixlib=rb-4.0.3&q=80&w=1080");
+    const [image, setImage] = useState(null);
     const { isLogin } = useContext(ExampleContext)
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         phone_number: "",
-        profile_image: ""
+        //profile_image: ""
     });
 
     const handleupdate = (e) => {
@@ -24,7 +27,7 @@ const Profile = () => {
         } catch (error) {
             console.error("Error:", error);
         }
-        setUpdate(true) 
+        setUpdate(true)
     };
     const navigate = useNavigate()
     useEffect(() => {
@@ -126,7 +129,52 @@ const Profile = () => {
     const handleButtonClick = () => {
         fileInputRef.current.click();
     };
-    console.log("image is",image)
+    console.log("image is", image)
+
+
+    const [show, setShow] = useState(false);
+    const [reviewData, setReviewData] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = async () => {
+        try {
+            const res = await axios.get('http://127.0.0.1:8000/get_reviews/?place_id=1');
+            const { user } = res.data[0];
+            const { username, profile_image } = user;
+            setReviewData({ username, profile_image });
+            setShow(true);
+            console.log(reviewData.username, reviewData.profile_image);
+        } catch (error) {
+            console.error("Error fetching review data:", error);
+        }
+    };
+
+    const [reviewText, setReviewText] = useState('');
+    const handleReviewChange = (e) => {
+        setReviewText(e.target.value);
+    };
+    const postReview = async () => {
+        try {
+            const data = {
+                review: reviewText,
+                place_id: 2,
+                rating: 4,
+                // You may need to include other data such as the user ID or place ID
+            };
+            await axiosInstance.post('http://127.0.0.1:8000/reviews/', data);
+            // Optionally, you can perform additional actions after the review is successfully posted
+            console.log('Review posted successfully');
+            handleClose(); // Close the modal after posting the review
+        } catch (error) {
+            console.error('Error posting review:', error);
+        }
+    };
+
+
+
+
+
+
 
     return (
         <div className='text-white h-auto mx-60'>
@@ -158,7 +206,7 @@ const Profile = () => {
                             type="text"
                             name="username"
                             value={formData.username}
-                            onChange={(e)=>{handleupdate(e)}}
+                            onChange={(e) => { handleupdate(e) }}
                             id="name"
                             placeholder="Full Name"
                             disabled={update ? true : false}
@@ -190,7 +238,7 @@ const Profile = () => {
                             name="phone_number"
                             id="mobile"
                             value={formData.phone_number}
-                            onChange={(e)=>{handleupdate(e)}}
+                            onChange={(e) => { handleupdate(e) }}
                             placeholder="Enter your mobile number"
                             disabled={update ? true : false}
                             className={` w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium ${update ? 'text-[#6B7280]' : 'text-black '}  outline-none focus:border-[#6A64F1] focus:shadow-md`}
@@ -241,8 +289,61 @@ const Profile = () => {
                                 </div>
                                 <div className="flex-col" style={doneinfosStyle}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '100%' }}>
-                                        <button className="font-bold" style={{ width: '100%', height: '100%', backgroundColor: '#1B54E8', color: '#000', fontSize: "45px", fontFamily: 'Josefin Sans, sans-serif' }}>Add review</button>
+                                        <button onClick={handleShow} className="font-bold" style={{ width: '100%', height: '100%', backgroundColor: '#1B54E8', color: '#000', fontSize: "45px", fontFamily: 'Josefin Sans, sans-serif' }}>Add review</button>
                                     </div>
+                                    <Modal style={{
+                                        position: 'absolute',
+                                        margin: 'auto',
+                                        borderRadius: 5,
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        width: 400,
+                                        color: 'white',
+                                        backgroundColor: '#979797',
+                                        border: '0px solid #000',
+                                        boxShadow: 24,
+
+
+
+                                    }} show={show} onHide={handleClose}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title className="-mb-8 mx-4" style={{ fontSize: '2.25rem' }}>{reviewData?.username}</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <Form>
+                                                <Form.Group className="" controlId="exampleForm.ControlInput1">
+
+
+                                                </Form.Group>
+                                                <Form.Group
+                                                    className="mb-0 grid grid-cols-3 justify-items-center m-4 "
+                                                    controlId="exampleForm.ControlTextarea1"
+                                                >
+                                                    <img
+                                                        src={`http://127.0.0.1:8000${reviewData?.profile_image}`}
+                                                        alt="User profile"
+                                                        className="rounded-full h-20 w-20 object-cover  justify-items-center"
+                                                    />
+
+                                                    <Form.Control as="textarea"
+                                                        className="text-black col-span-2 w-full h-20 rounded-lg m-4"
+                                                        rows={3}
+                                                        
+                                                        value={reviewText}
+                                                        onChange={handleReviewChange} />
+                                                </Form.Group>
+                                            </Form>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" className=' bg-slate-400 m-3 p-2 rounded-md' onClick={handleClose}>
+                                                Close
+                                            </Button>
+                                            <Button variant="primary" className=' bg-slate-600  p-2 rounded-md' onClick={postReview}>
+                                                Save 
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
                                 </div>
                             </div>
                         </div>

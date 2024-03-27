@@ -124,7 +124,7 @@ const Place = () => {
         <>
             <div className='md:h-full xl:mx-40'>
                 <div className='md:mx-20 mx-4 '>
-                    <h1 className='lg:text-7xl sm:text-5xl text-3xl font-bold text-white my-7'>{data.name}</h1>
+                    <h1 className='lg:text-7xl text-center sm:text-5xl text-3xl font-bold text-white my-7'>{data.name}</h1>
                     <div className='md:p-10 p-4 rounded-2xl' style={{ backgroundColor: '#081b33' }}>
                         <Caro />
                         <div className='text-white mt-5'>
@@ -175,23 +175,31 @@ const Place = () => {
                         </div>
                     </div>
                     <div className='my-7 p-10 text-white rounded-2xl ' style={{ backgroundColor: '#081b33' }}>
-                        <h1 className='font-bold text-4xl my-4'>Traveller's Review</h1>
-                        <div className='flex flex-row gap-60'>
-                            <div className='text-3xl my-3'>
+                        <h1 className='font-bold text-2xl sm:text-4xl my-4'>Traveller's Review</h1>
+                        < div className='grid m-8 gap-4 sm:grid-cols-3 '>
+                            <div className='text-3xl my-3 col-span-1 '>
                                 <h1 className='font-thin text-gray-500'>Total Reviews</h1>
                                 <h1>{reviews}</h1>
                                 <h1 className='font-thin text-gray-500 mt-6'>Average Rating</h1>
                                 <h1>{rating}</h1>
                             </div>
-                            <div className='flex flex-row gap-20'>
-                                <div className='bg-white w-1 rounded-2xl h-full'></div>
-                                <div className='grid grid-cols-2 gap-2'>
-                                    <h1 className='h-40 w-96 col-span-1 rounded-2xl p-6' style={{ backgroundColor: '#b6b6b6' }}></h1>
-                                    <h1 className='bg-gray-300 h-100 w-96 col-span-1 rounded-2xl' style={{ backgroundColor: '#b6b6b6' }}></h1>
-                                    <h1 className='bg-gray-300 h-40 w-96 col-span-1 rounded-2xl' style={{ backgroundColor: '#b6b6b6' }}></h1>
-                                    <h1 className='bg-gray-300 h-100 w-96 col-span-1 rounded-2xl' style={{ backgroundColor: '#b6b6b6' }}></h1>
+
+                            <div className='col-span-2 '>
+                                <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
+                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
+                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
+                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
+                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
+                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
+                                    <div className='h-auto w-full rounded-2xl p-6  ' style={{ backgroundColor: '#b6b6b6' }}></div>
+                                    <div className='h-auto w-full rounded-2xl p-6  ' style={{ backgroundColor: '#b6b6b6' }}></div>
                                 </div>
+
                             </div>
+
+
+
                         </div>
                     </div>
                     <div className='my-7 p-10 text-white rounded-2xl' style={{ backgroundColor: '#081b33' }}>
@@ -201,7 +209,7 @@ const Place = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 };

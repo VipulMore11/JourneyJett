@@ -6,7 +6,6 @@ import axios from 'axios';
 const Place_card = (props) => {
   const [icon, setIcon] = useState('')
   const [loc, setLoc] = useState('')
-  const [showimg, setShowimg] = useState(true)
   useEffect(() => {
     async function getdata() {
       try {

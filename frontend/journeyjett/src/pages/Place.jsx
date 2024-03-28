@@ -18,11 +18,11 @@ const Place = () => {
     const [saved, setSaved] = useState('')
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         async function getdata() {
             try {
                 const response = await axiosInstance.get(`http://127.0.0.1:8000/get_places/?id=${id}`);
                 setData(response.data);
-                console.log(data.location[0])
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -30,7 +30,7 @@ const Place = () => {
 
         getdata();
     }, [id]);
-
+    // console.log(data)
     useEffect(() => {
         async function getWeatherData() {
             try {
@@ -39,13 +39,26 @@ const Place = () => {
                 }
                 const res = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=bc0f0dcb734749ecaa1145032242303&q=${data.location[0]},${data.location[1]}&days=5`)
                 setForecast(res.data.forecast.forecastday)
-                console.log(res.data)
+                // console.log(res.data)
             } catch (error) {
                 console.error("Error fetching weather data:", error);
             }
         }
         getWeatherData();
     }, [data]);
+
+    useEffect(() => {
+        async function getdata() {
+            try {
+                const res = await axios.get('http://127.0.0.1:8000/get_reviews/?place_id=16')
+                console.log("review", res.data)
+            }
+            catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        getdata()
+    }, [])
 
 
     useEffect(() => {
@@ -78,7 +91,7 @@ const Place = () => {
         if (Bookmark == false) {
             setBookmark(true);
         }
-        else {
+        else if (Bookmark == true) {
             setBookmark(false);
         }
     }
@@ -92,7 +105,7 @@ const Place = () => {
                 }
                 else {
                     const res = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=bc0f0dcb734749ecaa1145032242303&q=mumbai&dt=${date}`)
-                    console.log(res.data)
+                    // console.log(res.data)
                     setForecast(res.data.forecast.forecastday)
                 }
 
@@ -134,7 +147,7 @@ const Place = () => {
                                 <h1 className='md:text-xl text-base'>{readmore ? truncateString(data.info, 800) : data.info} {readmore ? <button onClick={() => { setReadmore(!readmore) }} className='lg:text-2xl text-xl font-bold'>Read more</button> : ""}</h1>
                                 <div className='flex justify-between mt-5'>
                                     <button onClick={handleBookmark}>{Bookmark ? <FaBookmark className='size-14' /> : <CiBookmark className='size-14' />}</button>
-                                    <button className='bg-yellow-400 my-4 text-black font-bold h-12 flex items-center p-4 rounded-xl'>Add to Plan</button>
+                                    {/* <button className='bg-yellow-400 my-4 text-black font-bold h-12 flex items-center p-4 rounded-xl'>Add to Plan</button> */}
                                 </div>
                             </div>
                         </div>
@@ -142,7 +155,7 @@ const Place = () => {
                     <div className='my-7 p-10 text-white rounded-2xl' style={{ backgroundColor: '#081b33' }}>
                         <div className='flex gap-10'>
                             <h1 className=' font-bold text-4xl my-4'>Forecast</h1>
-                            <input type="date" className='text-white border-white border-2 rounded-3xl p-5' onChange={handledate} style={{background:"none"}}/>
+                            <input type="date" className='text-white border-white border-2 rounded-3xl p-5' onChange={handledate} style={{ background: "none" }} />
                         </div>
                         <div className=' grid grid-cols-5 text-xl gap-4 text-white mx-12 my-4' >
                             {forecast && forecast.map((d, i) => (
@@ -159,7 +172,7 @@ const Place = () => {
                                                 <h5 className='text-gray-400 text-base'>{d.day.avgtemp_c}°C</h5>
                                             </div>
                                             <div className='flex  overflow-ellipsis'>
-                                                {data.best_time === d.day.condition.text ? "Condition Looks Favourable": "Umm, try avoiding the place"}
+                                                {data.best_time === d.day.condition.text ? "Condition Looks Favourable" : "Umm, try avoiding the place"}
                                             </div>
                                         </div>}
                                 </div>
@@ -190,12 +203,7 @@ const Place = () => {
                                     <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
                                     <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
                                     <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
-                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
-                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
-                                    <div className='h-auto w-full rounded-2xl p-6  ' style={{ backgroundColor: '#b6b6b6' }}></div>
-                                    <div className='h-auto w-full rounded-2xl p-6  ' style={{ backgroundColor: '#b6b6b6' }}></div>
                                 </div>
-
                             </div>
 
 

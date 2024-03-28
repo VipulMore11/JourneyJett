@@ -5,17 +5,23 @@ import logo from "../assets/logojet-removebg-preview 1.svg"
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import Examplecontext from '../context/Context'
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
-
 export default function Navbar() {
+
+  const [isLogin, setLogin] = useState()
+  const token = localStorage.getItem('access_token')
+
+  useEffect(() => {
+    const refreshToken = localStorage.getItem('refresh_token');
+    setLogin(!!refreshToken); 
+}, [token]);
+
   const kausanFontStyle = {
     fontFamily: 'Kausan Script, cursive',
-    color: 'white', // Add other styles here as needed
+    color: 'white', 
     fontSize: '24px',
   };
   const location = useLocation();
@@ -26,8 +32,7 @@ export default function Navbar() {
     { name: 'About', href: '#', current: false },
   ]);
 
-  const navigate = useNavigate()  
-  const {isLogin} = useContext(Examplecontext)
+  const navigate = useNavigate()
   const logout = () => {
     localStorage.clear()
     navigate('/login');
@@ -36,10 +41,19 @@ export default function Navbar() {
 
   const [Log, setLog] = useState(false)
   useEffect(()=>{
-    if(isLogin){
-      setLog(!Log)
+    // if(isLogin == true){
+    //   setLog(!Log)
+    // }
+    if(localStorage.getItem('access_token')){
+      setLog(true)
     }
+    else{
+      setLog(false)
+    }
+    console.log(isLogin)
   }, [isLogin])
+
+  
 
   useEffect(() => {
     const updatedNavigation = navigation.map(item => ({
@@ -87,7 +101,7 @@ export default function Navbar() {
                 </div>
                 <div className="flex flex-1 justify-center">
                   <div className="hidden sm:block">
-                    <div className="flex space-x-4 mt-3 md:space-x-10 gap-12 justify-center"> {/* Adjusted space-x for responsiveness */}
+                    <div className="flex space-x-4 mt-3 md:space-x-10 gap-12 justify-center"> 
                       {navigation.map((item, index) => (
                         <Link
                           key={item.name}
@@ -146,7 +160,6 @@ export default function Navbar() {
                           </Link>
                         )}
                       </Menu.Item>
-
                       <Menu.Item>
                         {({ active }) => (
                           <Link to="/login"

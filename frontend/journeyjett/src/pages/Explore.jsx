@@ -7,52 +7,63 @@ import { useLocation } from 'react-router-dom';
 mapboxgl.accessToken = 'pk.eyJ1Ijoic29oYW0xMiIsImEiOiJjbG5mMThidXcwa2o4Mml0Y3IzMHh0ZzM1In0.NKrFUG12iisWBbf-TVp34g';
 
 const Explore = () => {
-
-    const location = useLocation()
-    const [homefilter, setHomefilter] = useState('')
-
-    useEffect(() => {
-        if (location.state && location.state.v1) {
-            setHomefilter(location.state.v1);
-        }
-    }, [location.state]);
-    const [lineCoordinates, setlineCoordinates] = useState([]);
+    window.scrollTo(0, 0)
+    const location = useLocation();
+    const [homefilter, setHomefilter] = useState('');
+    const [condition, setCondition] = useState('');
+    const [iscondition, setIscondition] = useState(true);
     const [data, setData] = useState([]);
     const [filter, setFilter] = useState([]);
     const [check, setCheck] = useState(true);
     const [showfilter, setShowFilter] = useState(false);
 
     useEffect(() => {
-        async function getdata() {
-            try {
-                const response = await axios.get(`http://127.0.0.1:8000/get_destinations/?state=${homefilter}`);
-                setData(response.data);
-            }
-            catch (error) {
-                console.error("Error fetching data:", error);
-            }
+        if (iscondition) {
+            setCondition(location.state?.weather || '');
+        } else {
+            setCondition('');
         }
-        getdata();
-    }, [homefilter])
+    }, [location.state, iscondition]);
+
+    useEffect(() => {
+        if (location.state && location.state.v1) {
+            setHomefilter(location.state.v1);
+            setIscondition(false);
+        }
+    }, [location.state]);
+
+    const [lineCoordinates, setlineCoordinates] = useState([]);
+
+    useEffect(() => {
+        const coordinates = data
+            .filter((d) => condition === '' || d.best_time === condition)
+            .map((place) => place.location);
+        setlineCoordinates(coordinates);
+    }, [data, condition]);
 
     useEffect(() => {
         async function getdata() {
             try {
-                {
-                    const response = await axios.get(`http://127.0.0.1:8000/get_places/?filter=${filter}`);
-                    setData(response.data);
-                }
+                const response = await axios.get(`http://127.0.0.1:8000/get_destinations/?state=${homefilter}`);
+                setData(response.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        getdata();
+    }, [homefilter]);
+
+    useEffect(() => {
+        async function getdata() {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/get_places/?filter=${filter}`);
+                setData(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
         getdata();
     }, [filter]);
-
-    useEffect(() => {
-        const coordinates = data.map(place => place.location);
-        setlineCoordinates(coordinates);
-    }, [data]);
 
     useEffect(() => {
         const map = new mapboxgl.Map({
@@ -64,7 +75,7 @@ const Explore = () => {
             container: 'map',
             antialias: true
         });
-    
+
         map.on('load', () => {
             if (lineCoordinates.length > 0) {
                 lineCoordinates.forEach(coordinate => {
@@ -76,33 +87,31 @@ const Explore = () => {
                 });
             }
         });
-    
+
         map.on('click', 'places', function (e) {
             var coordinates = e.features[0].geometry.coordinates.slice();
             var description = e.features[0].properties.description;
-    
+
             new mapboxgl.Popup()
                 .setLngLat(coordinates)
                 .setHTML(description)
                 .addTo(map);
         });
-    
-        // Change the cursor to a pointer when the mouse is over the places layer.
+
         map.on('mouseenter', 'places', function () {
             map.getCanvas().style.cursor = 'pointer';
         });
-    
-        // Change it back to a pointer when it leaves.
+
         map.on('mouseleave', 'places', function () {
             map.getCanvas().style.cursor = '';
         });
-    
+
         return () => {
             if (map) {
                 map.remove();
             }
         };
-    }, [lineCoordinates]);    
+    }, [lineCoordinates]);
 
     const filters = [
         { name: 'Trending' },
@@ -114,6 +123,7 @@ const Explore = () => {
 
     const handleFilter = (value) => {
         setCheck(!check);
+        setIscondition(false);
         setFilter(prevFilter => {
             if (prevFilter.includes(value)) {
                 return prevFilter.filter(item => item !== value);
@@ -121,7 +131,13 @@ const Explore = () => {
                 return [...prevFilter, value];
             }
         });
-    };  
+    };
+
+    const handleClearAllFilters = () => {
+        setFilter([]);
+        setCondition('');
+    };
+
     return (
         <div className='h-auto w-100 mt-3 xl:mx-20'>
             <div className='md:hidden'>
@@ -133,6 +149,7 @@ const Explore = () => {
                             <label htmlFor={d.name} className='text-lg text-white'>{d.name} Tours</label>
                         </div>
                     ))}
+                    <button onClick={handleClearAllFilters} className="text-white border-2 border-white rounded-3xl">Clear All Filters</button>
                 </div>
             </div>
             <div className='grid grid-cols-8 gap-5 mx-4'>
@@ -145,6 +162,7 @@ const Explore = () => {
                                 <label htmlFor={d.name} className='lg:text-xl md:text-sm'>{d.name} Tours</label>
                             </div>
                         ))}
+                        <button onClick={handleClearAllFilters} className="text-white">Clear All Filters</button>
                     </div>
                 </div>
                 <div className='md:col-span-6 col-span-8'>
@@ -171,11 +189,12 @@ const Explore = () => {
                     </div>
                     <div className='grid lg:grid-cols-3 grid-cols-2 gap-5 rounded-xl'>
                         {data.map((d) => (
-                            <div key={d.name}>
-                                <Place_card coordinates={d.location} place={d.id} height={"xl:h-60 h-36 sm:h-52 md:h-48 lg:h-42"} img={d.images?.[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
-                            </div>
+                            condition === '' || d.best_time === condition ? (
+                                <div key={d.name}>
+                                    <Place_card coordinates={d.location} place={d.id} height={"xl:h-60 h-36 sm:h-52 md:h-48 lg:h-42"} img={d.images?.[0]?.places_image} title={d.name} desc={d.info} city={d.city} state={d.state} />
+                                </div>
+                            ) : null
                         ))}
-
                     </div>
                 </div>
             </div>

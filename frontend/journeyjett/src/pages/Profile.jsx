@@ -3,9 +3,6 @@ import axios from 'axios';
 import ExampleContext from '../context/Context';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axios';
-import Button from 'react-bootstrap/Button';
-// import Form from 'react-bootstrap/Form';
-// import Modal from 'react-bootstrap/Modal';
 
 const Profile = () => {
     const [image, setImage] = useState(null);
@@ -25,6 +22,11 @@ const Profile = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+    
+    // const del = (id) => {
+    //     axiosInstance.post(`http://127.0.0.1:8000/saved_places/?id=${id}`)
+    // }
+
     const submitupdate = async (e) => {
         try {
             await axiosInstance.post(`http://127.0.0.1:8000/update_profile/`, formData);
@@ -105,32 +107,14 @@ const Profile = () => {
         }
     };
 
+    
     const host = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/397014/';
-    const [isHovered, setIsHovered] = useState(false);
-    const [doneisHovered, donesetIsHovered] = useState(false);
-
-
-    const handleMouseEnter = () => {
-        setIsHovered(true);
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-    };
-    const donehandleMouseEnter = () => {
-        donesetIsHovered(true);
-    };
-
-    const donehandleMouseLeave = () => {
-        donesetIsHovered(false);
-    };
 
     const fileInputRef = useRef(null);
 
     const handleButtonClick = () => {
         fileInputRef.current.click();
     };
-    // console.log("image is",image)
 
     return (
         <div className='text-white h-auto mx-60'>
@@ -178,13 +162,12 @@ const Profile = () => {
                             type="email"
                             name="email"
                             value={formData.email}
-                            // onChange={(e)=>{handleupdate(e)}}
                             id="email"
                             placeholder="email"
                             disabled={true}
                             className={` w-full rounded-md border border-[#e0e0e0] bg-[#D9D9D9] py-3 px-6 text-base font-medium text-[#6B7280]  outline-none focus:border-[#6A64F1] focus:shadow-md`}
                         />
-                    </div >
+                    </div>
                     <div className='my-5'>
                         <label htmlFor="mobile" className="mb-3 block text-base font-light text-white" style={{ fontSize: "30px" }}>
                             Mobile Number
@@ -226,7 +209,7 @@ const Profile = () => {
                                             {hoveredIndex === i && (
                                                 <div className='absolute bottom-0 right-0 flex flex-row '>
                                                     <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Done</button>
-                                                    <button className="font-bold p-3" style={{ backgroundColor: '#E81B1B', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Delete</button>
+                                                    <button  className="font-bold p-3" style={{ backgroundColor: '#E81B1B', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Delete</button>
                                                 </div>
                                             )}
                                         </div>

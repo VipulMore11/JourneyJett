@@ -40,10 +40,11 @@ const State = (props) => {
   
     };
     
+    
     useEffect(() => {
         const refreshToken = localStorage.getItem('refresh_token');
         setLogin(!!refreshToken); // Set true if refreshToken exists, false otherwise
-    }, []);
+    }, [token]);
 
   return <ExampleContext.Provider value={contextValue}>{props.children}</ExampleContext.Provider>;
 };

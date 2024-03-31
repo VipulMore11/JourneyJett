@@ -3,6 +3,10 @@ import axios from 'axios';
 import ExampleContext from '../context/Context';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axios';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import { Rating } from "@material-tailwind/react";
 
 const Profile = () => {
     const [image, setImage] = useState(null);
@@ -14,6 +18,7 @@ const Profile = () => {
         //profile_image: ""
     });
     const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [donehoveredIndex, setdoneHoveredIndex] = useState(null);
     const [saved, setSaved] = useState([])
     const [data, setData] = useState([])
     const [savedimages, setSavedimages] = useState([])
@@ -22,7 +27,7 @@ const Profile = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    
+
     // const del = (id) => {
     //     axiosInstance.post(`http://127.0.0.1:8000/saved_places/?id=${id}`)
     // }
@@ -80,15 +85,15 @@ const Profile = () => {
                 const responseData = await Promise.all(promises);
                 setData(responseData)
             } catch (error) {
-                console.error("Error fetching data:", error);   
+                console.error("Error fetching data:", error);
             }
         }
         getdata();
     }, [saved]);
 
     useEffect(() => {
-        const images = data.map((item) => item.images[0].places_image);
-        setSavedimages(images);
+        const images = data.map((item) => item.images[0] ? item.images[0].places_image : null);
+        setSavedimages(images.filter(image => image !== null));
     }, [data]);
 
     const [update, setUpdate] = useState(true)
@@ -107,7 +112,7 @@ const Profile = () => {
         }
     };
 
-    
+
     const host = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/397014/';
 
     const fileInputRef = useRef(null);
@@ -115,6 +120,170 @@ const Profile = () => {
     const handleButtonClick = () => {
         fileInputRef.current.click();
     };
+
+    const [doneTrips, setDoneTrips] = useState([]);
+    const [showDoneTripData, setShowDoneTripData] = useState(false);
+
+    useEffect(() => {
+        const fetchDoneTrips = async () => {
+            const token = localStorage.getItem("access_token");
+
+            try {
+                const promises = saved.map(async (c) => {
+                    const res = await axiosInstance.get(`http://127.0.0.1:8000/get_done_place/?id=${c}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    return res.data;
+                });
+                const responseData = await Promise.all(promises);
+                setDoneTrips(responseData);
+                console.log("done trips", responseData);
+                setShowDoneTripData(true);
+            } catch (error) {
+                console.error("Error fetching done trips data:", error);
+            }
+        };
+        fetchDoneTrips();
+    }, []);
+
+
+
+
+
+    const handleDoneButtonClick = async () => {
+        const token = localStorage.getItem("access_token");
+
+        try {
+            const promises = saved.map(async (id) => {
+
+                const response = await axiosInstance.post(`http://127.0.0.1:8000/done_place/`, { id },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                return response.data;
+            });
+
+
+            const responseData = await Promise.all(promises);
+
+
+            console.log("Response Data:", responseData);
+        } catch (error) {
+            console.error("Error posting IDs:", error);
+        }
+    };
+
+    const [isHovered, setIsHovered] = useState(false);
+    const [doneisHovered, donesetIsHovered] = useState(false);
+
+
+    const thumbStyle = {
+        width: 'auto',
+        height: '180px',
+        background: `url(${host}new-york-city.png) no-repeat center`,
+        backgroundSize: 'cover',
+        borderRadius: '15px',
+        display: 'flex',
+        alignItems: 'end',
+
+    };
+
+    const infosStyle = {
+        position: 'absolute',
+        top: 0,
+        background: '#fff',
+        right: isHovered ? '0' : '-100%',
+        width: '30%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        transition: '.4s .15s cubic-bezier(.17,.67,.5,1.03)',
+    };
+    const doneinfosStyle = {
+        position: 'absolute',
+        top: 0,
+        background: '#fff',
+        right: doneisHovered ? '0' : '-100%',
+        width: '30%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        transition: '.4s .15s cubic-bezier(.17,.67,.5,1.03)',
+    };
+
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+    const donehandleMouseEnter = () => {
+        donesetIsHovered(true);
+    };
+
+    const donehandleMouseLeave = () => {
+        donesetIsHovered(false);
+    };
+
+
+
+
+    const [show, setShow] = useState(false);
+    const [reviewData, setReviewData] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = async () => {
+        try {
+            const res = await axios.get('http://127.0.0.1:8000/get_reviews/?place_id=1');
+            const { user } = res.data[0];
+            const { username, profile_image } = user;
+            setReviewData({ username, profile_image });
+            setShow(true);
+            console.log(reviewData.username, reviewData.profile_image);
+        } catch (error) {
+            console.error("Error fetching review data:", error);
+        }
+    };
+
+    const [reviewText, setReviewText] = useState('');
+    const [rating, setRating] = useState(0);
+    const handleReviewChange = (e) => {
+        setReviewText(e.target.value);
+    };
+    const postReview = async () => {
+        try {
+            const data = {
+                review: reviewText,
+                place_id: 6,
+                rating: rating,
+                // You may need to include other data such as the user ID or place ID
+            };
+            await axiosInstance.post('http://127.0.0.1:8000/reviews/', data);
+            // Optionally, you can perform additional actions after the review is successfully posted
+            console.log('Review posted successfully');
+            handleClose(); // Close the modal after posting the review
+        } catch (error) {
+            console.error('Error posting review:', error);
+        }
+    };
+
+
+
 
     return (
         <div className='text-white h-auto mx-60'>
@@ -198,101 +367,117 @@ const Profile = () => {
                 <div className='relative'>
                     <article className="card my-6 ">
                         <div className='gap-5' >
+
                             <div>
                                 {data.map((d, i) => (
                                     <div key={i} className='my-5 relative' onMouseEnter={() => setHoveredIndex(i)} onMouseLeave={() => setHoveredIndex(null)}>
                                         <img src={`http://127.0.0.1:8000/${savedimages[i]}`} alt="hi" className='h-40 w-full object-cover rounded-2xl' />
-                                            <div className='absolute bottom-0 left-0 mx-5  bg-opacity-50 text-white font-bold text-4xl text-center py-2'>
-                                                {data[i].name}
-                                            </div>
+                                        <div className='absolute bottom-0 left-0 mx-5  bg-opacity-50 text-white font-bold text-4xl text-center py-2'>
+                                            {data[i].name}
+                                        </div>
                                         <div className=''>
                                             {hoveredIndex === i && (
                                                 <div className='absolute bottom-0 right-0 flex flex-row '>
-                                                    <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Done</button>
-                                                    <button  className="font-bold p-3" style={{ backgroundColor: '#E81B1B', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Delete</button>
+                                                    <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif ' }} onClick={handleDoneButtonClick}>Done</button>
+                                                    <button className="font-bold p-3" style={{ backgroundColor: '#E81B1B', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Delete</button>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
                                 ))}
                             </div>
+
                         </div>
                     </article>
                 </div>
             </div>
             <div className='h-auto rounded-xl p-9 my-12' style={{ backgroundColor: '#101c34' }}>
                 <h1 className='lg:text-6xl text-3xl font-bold'>Done Trips</h1>
-                {/* <div className='relative'>
-                    <article className="card my-6 " onMouseEnter={donehandleMouseEnter} onMouseLeave={donehandleMouseLeave}>
-                        <div className="thumb" style={{ ...thumbStyle, position: 'relative' }}>
-                            <div style={{ display: "flex" }}>
-                                <div className='p-2 fill-grow w-100'>
-                                    <div className='mx-10  text-white font-bold' style={{ fontSize: "45px", fontFamily: 'Josefin Sans, sans-serif' }}>
-                                        Dona paula
-                                    </div>
+                <div className='relative'>
+                    <article className="card my-6 ">
+                        <div className='gap-5' >
+                            {showDoneTripData && (
+                                <div>
+                                    {doneTrips.map((c, i) => (
+                                        <div key={i} className='my-5 relative' onMouseEnter={() => setdoneHoveredIndex(i)} onMouseLeave={() => setdoneHoveredIndex(null)}>
+                                            <img src={`http://127.0.0.1:8000/${savedimages[i]}`} alt="hi" className='h-40 w-full object-cover rounded-2xl' />
+                                            <div className='absolute bottom-0 left-0 mx-5  bg-opacity-50 text-white font-bold text-4xl text-center py-2'>
+                                                {doneTrips[i].name}
+                                            </div>
+                                            <div className=''>
+                                                {donehoveredIndex === i && (
+                                                    <div className='absolute bottom-0 right-0 flex flex-row '>
+                                                        <button className="font-bold p-3" style={{ backgroundColor: '#0000FF', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Add review</button>
+                                                        <Modal style={{
+                                                            position: 'absolute',
+                                                            margin: 'auto',
+                                                            borderRadius: 5,
+                                                            top: '50%',
+                                                            left: '50%',
+                                                            transform: 'translate(-50%, -50%)',
+                                                            width: 400,
+                                                            color: 'white',
+                                                            backgroundColor: '#979797',
+                                                            border: '0px solid #000',
+                                                            boxShadow: 24,
+
+
+
+                                                        }} show={show} onHide={handleClose}>
+                                                            <Modal.Header closeButton className='mb-0 grid grid-cols-3 justify-items-center m-4'>
+                                                                <div>
+                                                                    <Modal.Title className="-m-3 " style={{ fontSize: '2.25rem' }}>{reviewData?.username}</Modal.Title>
+                                                                </div>
+                                                                <div className=' grid col-span-2'>
+                                                                    <Rating value={rating} onChange={setRating} />
+                                                                </div>
+                                                            </Modal.Header>
+                                                            <Modal.Body>
+                                                                <Form>
+                                                                    <Form.Group className="" controlId="exampleForm.ControlInput1">
+
+
+                                                                    </Form.Group>
+                                                                    <Form.Group
+                                                                        className="mb-0 grid grid-cols-3 justify-items-center m-4 "
+                                                                        controlId="exampleForm.ControlTextarea1"
+                                                                    >
+                                                                        <img
+                                                                            src={`http://127.0.0.1:8000${reviewData?.profile_image}`}
+                                                                            alt="User profile"
+                                                                            className="rounded-full h-20 w-20 object-cover  justify-items-center"
+                                                                        />
+
+                                                                        <Form.Control as="textarea"
+                                                                            className="text-black col-span-2 w-full h-20 rounded-lg m-4"
+                                                                            rows={3}
+
+                                                                            value={reviewText}
+                                                                            onChange={handleReviewChange} />
+                                                                    </Form.Group>
+                                                                </Form>
+                                                            </Modal.Body>
+                                                            <Modal.Footer>
+                                                                <Button variant="secondary" className=' bg-slate-400 m-3 p-2 rounded-md' onClick={handleClose}>
+                                                                    Close
+                                                                </Button>
+                                                                <Button variant="primary" className=' bg-slate-600  p-2 rounded-md' onClick={postReview}>
+                                                                    Save
+                                                                </Button>
+                                                            </Modal.Footer>
+                                                        </Modal>
+
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                                <div className="flex-col" style={doneinfosStyle}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '100%' }}>
-                                        <button onClick={handleShow} className="font-bold" style={{ width: '100%', height: '100%', backgroundColor: '#1B54E8', color: '#000', fontSize: "45px", fontFamily: 'Josefin Sans, sans-serif' }}>Add review</button>
-                                    </div>
-                                    <Modal style={{
-                                        position: 'absolute',
-                                        margin: 'auto',
-                                        borderRadius: 5,
-                                        top: '50%',
-                                        left: '50%',
-                                        transform: 'translate(-50%, -50%)',
-                                        width: 400,
-                                        color: 'white',
-                                        backgroundColor: '#979797',
-                                        border: '0px solid #000',
-                                        boxShadow: 24,
-
-
-
-                                    }} show={show} onHide={handleClose}>
-                                        <Modal.Header closeButton>
-                                            <Modal.Title className="-mb-8 mx-4" style={{ fontSize: '2.25rem' }}>{reviewData?.username}</Modal.Title>
-                                        </Modal.Header>
-                                        <Modal.Body>
-                                            <Form>
-                                                <Form.Group className="" controlId="exampleForm.ControlInput1">
-
-
-                                                </Form.Group>
-                                                <Form.Group
-                                                    className="mb-0 grid grid-cols-3 justify-items-center m-4 "
-                                                    controlId="exampleForm.ControlTextarea1"
-                                                >
-                                                    <img
-                                                        src={`http://127.0.0.1:8000${reviewData?.profile_image}`}
-                                                        alt="User profile"
-                                                        className="rounded-full h-20 w-20 object-cover  justify-items-center"
-                                                    />
-
-                                                    <Form.Control as="textarea"
-                                                        className="text-black col-span-2 w-full h-20 rounded-lg m-4"
-                                                        rows={3}
-                                                        
-                                                        value={reviewText}
-                                                        onChange={handleReviewChange} />
-                                                </Form.Group>
-                                            </Form>
-                                        </Modal.Body>
-                                        <Modal.Footer>
-                                            <Button variant="secondary" className=' bg-slate-400 m-3 p-2 rounded-md' onClick={handleClose}>
-                                                Close
-                                            </Button>
-                                            <Button variant="primary" className=' bg-slate-600  p-2 rounded-md' onClick={postReview}>
-                                                Save 
-                                            </Button>
-                                        </Modal.Footer>
-                                    </Modal>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </article>
-                </div> */}
+                </div>
+                
             </div>
         </div>
     );

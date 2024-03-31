@@ -6,6 +6,7 @@ import { FaBookmark } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
 import axiosInstance from '../axios';
 import Recommendation from '../components/Recommendation';
+import img from "../assets/Goa card.svg"
 
 const Place = () => {
     const { id } = useParams()
@@ -14,8 +15,10 @@ const Place = () => {
     const [reviews, setReviews] = useState('20')
     const [rating, setRating] = useState("4.0")
     const [readmore, setReadmore] = useState(true)
+    const [reviewreadmore, setReviewreadmore] = useState(true)
     const [forecast, setForecast] = useState([])
     const [saved, setSaved] = useState('')
+    const [userreviews, setUserreviews] = useState([])
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -23,6 +26,9 @@ const Place = () => {
             try {
                 const response = await axiosInstance.get(`http://127.0.0.1:8000/get_places/?id=${id}`);
                 setData(response.data);
+                setReviews(response.data.total_reviews);
+                setRating(response.data.rating);
+                console.log(response.data)
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -50,8 +56,8 @@ const Place = () => {
     useEffect(() => {
         async function getdata() {
             try {
-                const res = await axios.get('http://127.0.0.1:8000/get_reviews/?place_id=16')
-                console.log("review", res.data)
+                const res = await axios.get(`http://127.0.0.1:8000/get_reviews/?place_id=${id}`)
+                setUserreviews(res.data)
             }
             catch (error) {
                 console.error("Error fetching data:", error);
@@ -147,7 +153,6 @@ const Place = () => {
                                 <h1 className='md:text-xl text-base'>{readmore ? truncateString(data.info, 800) : data.info} {readmore ? <button onClick={() => { setReadmore(!readmore) }} className='lg:text-2xl text-xl font-bold'>Read more</button> : ""}</h1>
                                 <div className='flex justify-between mt-5'>
                                     <button onClick={handleBookmark}>{Bookmark ? <FaBookmark className='size-14' /> : <CiBookmark className='size-14' />}</button>
-                                    {/* <button className='bg-yellow-400 my-4 text-black font-bold h-12 flex items-center p-4 rounded-xl'>Add to Plan</button> */}
                                 </div>
                             </div>
                         </div>
@@ -199,15 +204,11 @@ const Place = () => {
 
                             <div className='col-span-2 '>
                                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
-                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
-                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
-                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
-                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}></div>
+                                    {userreviews.map((d)=>(
+                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}><div className='flex flex-row gap-4'><img src={img} alt='' className='size-10 rounded-full'/><h1 className='text-2xl font-bold text-black'>{d.user.username}</h1></div><p className='my-3 border-2 border-black rounded p-3 text-black'>{reviewreadmore ? truncateString(d.review, 50) : d.review}<button onClick={()=>{setReviewreadmore(!reviewreadmore)}}>Read More</button></p></div>
+                                    ))}
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
                     <div className='my-7 p-10 text-white rounded-2xl' style={{ backgroundColor: '#081b33' }}>

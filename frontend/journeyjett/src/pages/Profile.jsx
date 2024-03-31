@@ -6,26 +6,31 @@ import axiosInstance from '../axios';
 
 const Profile = () => {
     const [image, setImage] = useState(null);
-    const { isLogin } = useContext(ExampleContext)
+    const [prof_img, setProf_img] = useState()
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         phone_number: "",
-        //profile_image: ""
+        profile_image: prof_img
     });
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const [saved, setSaved] = useState([])
     const [data, setData] = useState([])
     const [savedimages, setSavedimages] = useState([])
-
+    const [save, setSave] = useState(false)
+    
+    const handlesave = (id) => async () => {
+        try {
+            await axiosInstance.post('done_place/', {id});
+            setSave(!save)
+        } catch (error) {
+            console.error(error);
+        }
+    };
     const handleupdate = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    
-    // const del = (id) => {
-    //     axiosInstance.post(`http://127.0.0.1:8000/saved_places/?id=${id}`)
-    // }
 
     const submitupdate = async (e) => {
         try {
@@ -33,8 +38,23 @@ const Profile = () => {
         } catch (error) {
             console.error("Error:", error);
         }
-        setUpdate(true)
+        setUpdate(true);
     };
+
+    const [done, setDone] = useState([])
+    useEffect(()=>{
+        async function getdata(){
+            try{
+                const res = await axiosInstance.get('http://127.0.0.1:8000/get_done_place/')
+                setDone(res.data)
+            }
+            catch(error){
+                console.error("Error fetching data:", error);
+            }
+        }
+        getdata()
+    },[save])
+    
     const navigate = useNavigate()
     useEffect(() => {
         async function getdata() {
@@ -61,14 +81,14 @@ const Profile = () => {
                     array.push(d.place.id)
                 })
                 setSaved(array)
-                console.log("ids", array)
+                // console.log("ids", array)
             }
             catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
         getdata();
-    }, [formData])
+    }, [save])
 
     useEffect(() => {
         async function getdata() {
@@ -96,6 +116,7 @@ const Profile = () => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
+        setProf_img(file)
         const reader = new FileReader();
 
         reader.onloadend = () => {
@@ -106,6 +127,7 @@ const Profile = () => {
             reader.readAsDataURL(file);
         }
     };
+    // console.log("profile image is",prof_img)
 
     
     const host = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/397014/';
@@ -115,6 +137,7 @@ const Profile = () => {
     const handleButtonClick = () => {
         fileInputRef.current.click();
     };
+    
 
     return (
         <div className='text-white h-auto mx-60'>
@@ -208,7 +231,7 @@ const Profile = () => {
                                         <div className=''>
                                             {hoveredIndex === i && (
                                                 <div className='absolute bottom-0 right-0 flex flex-row '>
-                                                    <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Done</button>
+                                                    <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }} onClick={handlesave(data[i].id)}>Done</button>
                                                     <button  className="font-bold p-3" style={{ backgroundColor: '#E81B1B', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Delete</button>
                                                 </div>
                                             )}
@@ -222,6 +245,27 @@ const Profile = () => {
             </div>
             <div className='h-auto rounded-xl p-9 my-12' style={{ backgroundColor: '#101c34' }}>
                 <h1 className='lg:text-6xl text-3xl font-bold'>Done Trips</h1>
+                <article className="card my-6 ">
+                        <div className='gap-5' >
+                            <div>
+                                {done.map((d, i) => (
+                                    <div key={i} className='my-5 relative' onMouseEnter={() => setHoveredIndex(i)} onMouseLeave={() => setHoveredIndex(null)}>
+                                        <img src={`http://127.0.0.1:8000/${d.place.images[0].places_image}`} alt="hi" className='h-40 w-full object-cover rounded-2xl' />
+                                            <div className='absolute bottom-0 left-0 mx-5  bg-opacity-50 text-white font-bold text-4xl text-center py-2'>
+                                                {d.place.name}
+                                            </div>
+                                        <div className=''>
+                                            {hoveredIndex === i && (
+                                                <div className='absolute bottom-0 right-0 flex flex-row '>
+                                                    <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }} >Add Review</button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </article>
                 {/* <div className='relative'>
                     <article className="card my-6 " onMouseEnter={donehandleMouseEnter} onMouseLeave={donehandleMouseLeave}>
                         <div className="thumb" style={{ ...thumbStyle, position: 'relative' }}>

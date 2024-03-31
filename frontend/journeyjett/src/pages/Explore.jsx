@@ -46,6 +46,7 @@ const Explore = () => {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/get_destinations/?state=${homefilter}`);
                 setData(response.data);
+                console.log("homie",response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }

@@ -37,11 +37,13 @@ const Place_card = (props) => {
             <h5 className="mb-2 sm:text-2xl text-base font-bold tracking-tight text-gray-900 dark:text-white">{props.title}</h5>
             <p className="mb-1 font-normal text-sm sm:text-base text-gray-700 dark:text-gray-400">{truncateString(props.desc, 60)}</p>
           </div>
-          <div className='m-4 flex flex-row align-middle items-center'>
+          <div className='m-4 flex flex-col md:flex-row align-middle items-center '>
             <FaLocationDot color='white' />
             <h1 className='text-white mx-3'>{props.city}, {props.state}</h1>
-            <img className='size-14' src={icon} alt="hii" />
-            <h1 className='text-white'>{loc}</h1>
+            <div className='flex flex-row items-center'>
+              <img className='size-14' src={icon} alt="hii" />
+              <h1 className='text-white'>{loc}</h1>
+            </div>
           </div>
         </div>
       </Link>

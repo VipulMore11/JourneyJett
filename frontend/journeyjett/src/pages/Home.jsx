@@ -58,7 +58,6 @@ const Home = () => {
 
     const handlevalue = (value) => {
         setV1(value);
-        // console.log("v1:", value);
         navigate('/explore', { state: { v1: value } });
     }
 

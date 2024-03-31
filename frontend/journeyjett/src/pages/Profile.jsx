@@ -3,6 +3,10 @@ import axios from 'axios';
 import ExampleContext from '../context/Context';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axios';
+import Modal from 'react-bootstrap/Modal';
+import { Rating } from "@material-tailwind/react";
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 const Profile = () => {
     const [image, setImage] = useState(null);
@@ -13,11 +17,58 @@ const Profile = () => {
         phone_number: "",
         profile_image: prof_img
     });
+    const [show, setShow] = useState(false);
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const [saved, setSaved] = useState([])
     const [data, setData] = useState([])
     const [savedimages, setSavedimages] = useState([])
     const [save, setSave] = useState(false)
+    const [reviewData, setReviewData] = useState(false);
+    const [rating, setRating] = useState(0);
+    const handleClose = () => setShow(false);
+
+    const dele = async (id) => {
+        try {
+            await axiosInstance.post(`/saved_places/?id=${id}`);
+            console.log('Delete successful');
+        } catch (error) {
+            console.error('Error deleting:', error);
+        }
+    };
+    
+    
+    const [reviewText, setReviewText] = useState('');
+    const handleShow = async () => {
+        try {
+            const res = await axios.get('http://127.0.0.1:8000/get_reviews/?place_id=1');
+            const { user } = res.data[0];
+            const { username, profile_image } = user;
+            setReviewData({ username, profile_image });
+            setShow(true);
+            console.log(reviewData.username, reviewData.profile_image);
+        } catch (error) {
+            console.error("Error fetching review data:", error);
+        }
+    };
+    const handleReviewChange = (e) => {
+        setReviewText(e.target.value);
+    };
+    const postReview = async () => {
+        try {
+            const data = {
+                review: reviewText,
+                place_id: 6,
+                rating: rating,
+                // You may need to include other data such as the user ID or place ID
+            };
+            await axiosInstance.post('http://127.0.0.1:8000/reviews/', data);
+            // Optionally, you can perform additional actions after the review is successfully posted
+            console.log('Review posted successfully');
+            handleClose(); // Close the modal after posting the review
+        } catch (error) {
+            console.error('Error posting review:', error);
+        }
+    };
     
     const handlesave = (id) => async () => {
         try {
@@ -232,7 +283,7 @@ const Profile = () => {
                                             {hoveredIndex === i && (
                                                 <div className='absolute bottom-0 right-0 flex flex-row '>
                                                     <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }} onClick={handlesave(data[i].id)}>Done</button>
-                                                    <button  className="font-bold p-3" style={{ backgroundColor: '#E81B1B', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}>Delete</button>
+                                                    <button  className="font-bold p-3" style={{ backgroundColor: '#E81B1B', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }} onClick={dele([i].id)}>Delete</button>
                                                 </div>
                                             )}
                                         </div>
@@ -257,7 +308,65 @@ const Profile = () => {
                                         <div className=''>
                                             {hoveredIndex === i && (
                                                 <div className='absolute bottom-0 right-0 flex flex-row '>
-                                                    <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }} >Add Review</button>
+                                                    <button className="font-bold p-3" style={{ backgroundColor: '#3DCC3A', color: '#000', fontSize: "25px", fontFamily: 'Josefin Sans, sans-serif' }}  >Add Review</button>
+                                                    <Modal style={{
+                                                            position: 'absolute',
+                                                            margin: 'auto',
+                                                            borderRadius: 5,
+                                                            top: '50%',
+                                                            left: '50%',
+                                                            transform: 'translate(-50%, -50%)',
+                                                            width: 400,
+                                                            color: 'white',
+                                                            backgroundColor: '#979797',
+                                                            border: '0px solid #000',
+                                                            boxShadow: 24,
+
+
+
+                                                        }} show={show} onHide={handleClose}>
+                                                            <Modal.Header closeButton className='mb-0 grid grid-cols-3 justify-items-center m-4'>
+                                                                <div>
+                                                                    <Modal.Title className="-m-3 " style={{ fontSize: '2.25rem' }}>{reviewData?.username}</Modal.Title>
+                                                                </div>
+                                                                <div className=' grid col-span-2'>
+                                                                    <Rating value={rating} onChange={setRating} />
+                                                                </div>
+                                                            </Modal.Header>
+                                                            <Modal.Body>
+                                                                <Form>
+                                                                    <Form.Group className="" controlId="exampleForm.ControlInput1">
+
+
+                                                                    </Form.Group>
+                                                                    <Form.Group
+                                                                        className="mb-0 grid grid-cols-3 justify-items-center m-4 "
+                                                                        controlId="exampleForm.ControlTextarea1"
+                                                                    >
+                                                                        <img
+                                                                            src={`http://127.0.0.1:8000${reviewData?.profile_image}`}
+                                                                            alt="User profile"
+                                                                            className="rounded-full h-20 w-20 object-cover  justify-items-center"
+                                                                        />
+
+                                                                        <Form.Control as="textarea"
+                                                                            className="text-black col-span-2 w-full h-20 rounded-lg m-4"
+                                                                            rows={3}
+
+                                                                            value={reviewText}
+                                                                            onChange={handleReviewChange} />
+                                                                    </Form.Group>
+                                                                </Form>
+                                                            </Modal.Body>
+                                                            <Modal.Footer>
+                                                                <Button variant="secondary" className=' bg-slate-400 m-3 p-2 rounded-md' onClick={handleClose}>
+                                                                    Close
+                                                                </Button>
+                                                                <Button variant="primary" className=' bg-slate-600  p-2 rounded-md' onClick={postReview}>
+                                                                    Save
+                                                                </Button>
+                                                            </Modal.Footer>
+                                                        </Modal>
                                                 </div>
                                             )}
                                         </div>

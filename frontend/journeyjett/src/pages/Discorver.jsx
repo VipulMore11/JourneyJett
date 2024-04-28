@@ -27,7 +27,7 @@ const Discover = () => {
                 <h1 className='lg:text-6xl text-3xl'>Best Destination</h1>
                 <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-4 my-12 sm:mx-5 lg:mx-16 justify-items-center'>
                     {data.length > 0 && data.map((d, i) => (
-                        <Link to={`/places/${d.id}`}><img key={i} className='xl:h-96 xl:w-72 lg:h-72 lg:w-60 md:h-52 h-40 w-32 md:w-40 rounded-2xl' src={`http://localhost:8000/${d.images[0].places_image}`} alt="" /></Link>
+                        <Link to={`/places/${d.id}`}><img key={i} className='xl:h-96 xl:w-72 lg:h-72 lg:w-60 md:h-52 h-40 w-32 md:w-40 rounded-2xl' src={`http://localhost:8000/${d?.images[0]?.places_image}`} alt="" /></Link>
                     ))}
                 </div>
             </div>
@@ -37,7 +37,6 @@ const Discover = () => {
                     <Recommendation showIcon={false} />
                 </div>
             </div>
-            <div className='w-full border-2 border-white h-96'></div>
         </div>
     );
 };

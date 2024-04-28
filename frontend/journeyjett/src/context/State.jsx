@@ -37,10 +37,9 @@ const State = (props) => {
       setLogin: setLogin,
       onpage: onpage,
       setPage: setPage,
-  
     };
-    
-    
+
+    console.log(username)
     useEffect(() => {
         const refreshToken = localStorage.getItem('refresh_token');
         setLogin(!!refreshToken); // Set true if refreshToken exists, false otherwise

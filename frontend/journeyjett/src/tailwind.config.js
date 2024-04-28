@@ -1,15 +1,13 @@
+const flowbite = require("flowbite-react/tailwind");
+
 /** @type {import('tailwindcss').Config} */
-
-
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    // ...
+    flowbite.content(),
   ],
-  theme: {
-    extend: {fontFamily: {
-        'sans': ['Alumni Sans', 'ui-sans-serif', 'system-ui'],
-        'script': ['"Kausan Script"', 'cursive'],
-      },},
-  },
-  plugins: [],
-}
+  plugins: [
+    // ...
+    flowbite.plugin(),
+  ],
+};

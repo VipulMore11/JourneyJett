@@ -5,6 +5,7 @@ import logo from "../assets/logojet-removebg-preview 1.svg"
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import img from "../assets/profile-icon-design-free-vector.jpg"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -29,21 +30,16 @@ export default function Navbar() {
     { name: 'Home', href: '/', current: false },
     { name: 'Explore', href: '/explore', current: false },
     { name: 'Discover', href: '/discover', current: false },
-    { name: 'About', href: '#', current: false },
   ]);
 
   const navigate = useNavigate()
   const logout = () => {
     localStorage.clear()
     navigate('/login');
-    // window.location.reload();
   }
 
   const [Log, setLog] = useState(false)
   useEffect(()=>{
-    // if(isLogin == true){
-    //   setLog(!Log)
-    // }
     if(localStorage.getItem('access_token')){
       setLog(true)
     }
@@ -135,7 +131,7 @@ export default function Navbar() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src={img}
                         alt=""
                       />
                     </Menu.Button>

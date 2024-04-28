@@ -6,14 +6,14 @@ import { FaBookmark } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
 import axiosInstance from '../axios';
 import Recommendation from '../components/Recommendation';
-import img from "../assets/Goa card.svg"
+import img from "../assets/profile-icon-design-free-vector.jpg"
 
 const Place = () => {
     const { id } = useParams()
     const [data, setData] = useState(null)
     const [Bookmark, setBookmark] = useState(false)
     const [reviews, setReviews] = useState('20')
-    const [rating, setRating] = useState("4.0")
+    const [rating, setRating] = useState("0.00")
     const [readmore, setReadmore] = useState(true)
     const [reviewreadmore, setReviewreadmore] = useState(true)
     const [forecast, setForecast] = useState([])
@@ -27,8 +27,8 @@ const Place = () => {
                 const response = await axiosInstance.get(`http://127.0.0.1:8000/get_places/?id=${id}`);
                 setData(response.data);
                 setReviews(response.data.total_reviews);
-                setRating(response.data.rating);
-                console.log(response.data)
+                setRating(parseFloat(response?.data?.rating).toFixed(2));
+                console.log("place info",response.data)
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -58,6 +58,7 @@ const Place = () => {
             try {
                 const res = await axios.get(`http://127.0.0.1:8000/get_reviews/?place_id=${id}`)
                 setUserreviews(res.data)
+                console.log("reviews",res.data)
             }
             catch (error) {
                 console.error("Error fetching data:", error);
@@ -111,8 +112,8 @@ const Place = () => {
                 }
                 else {
                     const res = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=bc0f0dcb734749ecaa1145032242303&q=mumbai&dt=${date}`)
-                    // console.log(res.data)
                     setForecast(res.data.forecast.forecastday)
+                    console.log(res.data)
                 }
 
             }
@@ -177,7 +178,7 @@ const Place = () => {
                                                 <h5 className='text-gray-400 text-base'>{d.day.avgtemp_c}°C</h5>
                                             </div>
                                             <div className='flex  overflow-ellipsis'>
-                                                {data.best_time === d.day.condition.text ? "Condition Looks Favourable" : "Umm, try avoiding the place"}
+                                                {data.best_time === d.day.condition.text ? "" : ""}
                                             </div>
                                         </div>}
                                 </div>
@@ -204,8 +205,10 @@ const Place = () => {
 
                             <div className='col-span-2 '>
                                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
-                                    {userreviews.map((d)=>(
-                                    <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}><div className='flex flex-row gap-4'><img src={img} alt='' className='size-10 rounded-full'/><h1 className='text-2xl font-bold text-black'>{d.user.username}</h1></div><p className='my-3 border-2 border-black rounded p-3 text-black'>{reviewreadmore ? truncateString(d.review, 50) : d.review}<button onClick={()=>{setReviewreadmore(!reviewreadmore)}}>Read More</button></p></div>
+                                    {userreviews.map((d) => (
+                                        <div className='h-auto w-full rounded-2xl p-6 ' style={{ backgroundColor: '#b6b6b6' }}><div className='flex flex-row gap-4'><img src={img} alt='' className='size-10 rounded-full' /><h1 className='text-2xl font-bold text-black'>{d.user.username}</h1></div><p className='my-3 border-2 border-black rounded p-3 text-black'>{reviewreadmore ? truncateString(d.review, 50) : d.review}
+                                            {d.review.length > 50 ? (<button onClick={() => { setReviewreadmore(!reviewreadmore) }}>Read More</button>) : (<h1></h1>)}
+                                        </p></div>
                                     ))}
                                 </div>
                             </div>

@@ -9,6 +9,9 @@ import { FaSearch } from "react-icons/fa";
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { Navigate, useNavigate } from 'react-router-dom';
+import img1 from "../assets/one-day-pune-to-khandala-and-lonavala-tour-package-by-private-cab-header-1568x1045.webp"
+import img2 from "../assets/1200px-Khajuraho_Group_of_Monuments_4.jpg"
+import img3 from "../assets/1538058668.jpg"
 
 const Home = () => {
 
@@ -19,6 +22,7 @@ const Home = () => {
     const [focus1, setFocus1] = useState(false);
     const [focus2, setFocus2] = useState(false);
     const [weather, setWeather] = useState('')
+    const [isHovering, setIsHovering] = useState(false);
 
     useEffect(()=>{
         window.scrollTo(0, 0)
@@ -54,9 +58,10 @@ const Home = () => {
         getData();
     }, []);
     const handleFilter = (value) => {
-        const response = input.filter(f => f.name.includes(value));
-        setInputFilter(response);
+        const filteredInput = input.filter(f => f.name.toLowerCase().includes(value.toLowerCase()));
+        setInputFilter(filteredInput);
     };
+    
 
     const handlevalue = (value) => {
         setV1(value);
@@ -125,9 +130,9 @@ const Home = () => {
                 Get professional guidance, practical travel advice, comprehensive destination details, and motivation <br /> from us to plan and reserve your ideal vacation.
             </div>
             <div className='grid grid-cols-3 gap-6 mt-10 mx-40 m-10 justify-items-center' style={{cursor:'pointer'}}>
-                    <img onClick={() => { handleweather('Sunny') }} src={wildlife} alt="" className='row-span-1  h-full' />
-                    <img onClick={() => { handleweather('Rain') }} src={adventure} alt="" className='row-span-1 h-full w-full ' />
-                    <img onClick={() => { handleweather('Winter') }} src={beach} alt="" className='row-span-1 h-full w-full ' />
+                    <img onClick={() => { handleweather('Summer') }} src={wildlife} alt="" className={`row-span-1 h-full `} />
+                    <img onClick={() => { handleweather('Rainy') }} src={adventure} alt="" className='row-span-1 h-full w-full'/>
+                    <img onClick={() => { handleweather('Winter') }} src={beach} alt="" className='row-span-1 h-full w-full'/>
                 </div>
             <div className='grid sm:grid-cols-2 mt-4 sm:mt-40 md:gap-52'>
                 <div className='text-white md:ms-40 '>
@@ -135,9 +140,9 @@ const Home = () => {
                     <h1 className='text-center text-sm px-9 sm:text-base'>We're sharing the latest information on the best places to <br />travel right nowt many countries have opened their doors to <br />tourists in recent weeks.</h1>
                 </div>
                 <div className='flex flex-row gap-8 mt-4 justify-center'>
-                    <img src={rect} alt="" className='rounded-full sm:h-32 h-20' />
-                    <img src={rect} alt="" className='rounded-full sm:h-32 h-20 md:mt-28' />
-                    <img src={rect} alt="" className='rounded-full sm:h-32 h-20 ' />
+                    <img src={img1} alt="" className='rounded-full sm:h-32 h-20 w-28' />
+                    <img src={img2} alt="" className='rounded-full sm:h-32 h-20 w-28 md:mt-28' />
+                    <img src={img3} alt="" className='rounded-full sm:h-32 h-20 w-28 ' />
                 </div>
             </div>
         </>
